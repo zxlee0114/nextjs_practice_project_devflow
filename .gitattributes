@@ -1,0 +1,25 @@
+# 統一使用 LF 行尾
+* text=auto eol=lf
+
+# JavaScript/TypeScript 文件
+*.js text eol=lf
+*.mjs text eol=lf
+*.ts text eol=lf
+*.jsx text eol=lf
+*.tsx text eol=lf
+
+# 配置文件
+*.json text eol=lf
+*.config.js text eol=lf
+*.config.mjs text eol=lf
+
+# 樣式文件
+*.css text eol=lf
+*.scss text eol=lf
+
+# 文檔文件
+*.md text eol=lf
+README* text eol=lf
+
+# 忽略文件
+.gitignore text eol=lf
