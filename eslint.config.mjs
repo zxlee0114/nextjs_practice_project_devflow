@@ -37,8 +37,13 @@ const eslintConfig = [
 
           pathGroups: [
             {
-              pattern: "@app/**",
-              group: "external",
+              pattern: "@/**",
+              group: "internal",
+              position: "before",
+            },
+            {
+              pattern: "@root/**",
+              group: "internal",
               position: "after",
             },
           ],
