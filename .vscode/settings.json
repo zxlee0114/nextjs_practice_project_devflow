@@ -35,10 +35,15 @@
   },
   "typescript.tsdk": "node_modules/typescript/lib",
 
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+
   "files.exclude": {
     "**/.next": true,
     "**/node_modules": true,
-    "next-env.d.ts": true,
-    ".gitattributes": true
+    ".gitattributes": true,
+    ".npmrc": true,
+    "next-env.d.ts": true
   }
 }
