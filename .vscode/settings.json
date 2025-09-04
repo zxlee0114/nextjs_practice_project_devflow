@@ -44,6 +44,8 @@
     "**/node_modules": true,
     ".gitattributes": true,
     ".npmrc": true,
-    "next-env.d.ts": true
+    "next-env.d.ts": true,
+    ".eslintignore": true,
+    ".prettierignore": true
   }
 }
