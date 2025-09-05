@@ -1,11 +1,28 @@
-import Hello from "@/components/hello";
+import React from "react";
 
-export default function Home() {
+import { auth, signOut } from "@/auth";
+import { Button } from "@/components/ui/button";
+import ROUTES from "@/constants/routes";
+
+const Homepage = async () => {
+  const session = await auth();
+  console.log(session);
   return (
     <>
-      <h1 className="h1-bold text-3xl">Next.js</h1>
-      <h1 className="h1-bold font-inter text-3xl">Next.js (inter)</h1>
-      <Hello />
+      <h1 className="pt-[100px] text-3xl font-bold underline">
+        Hi, {session?.user?.name || "Guest"}!
+      </h1>
+      <form
+        className="pt-4"
+        action={async () => {
+          "use server";
+          await signOut({ redirectTo: ROUTES.SIGN_IN });
+        }}
+      >
+        <Button type="submit">Logout</Button>
+      </form>
     </>
   );
-}
+};
+
+export default Homepage;
