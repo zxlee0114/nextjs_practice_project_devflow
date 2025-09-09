@@ -11,3 +11,8 @@ const ROUTES = {
 };
 
 export default ROUTES;
+
+export const DYNAMIC_ROUTES = {
+  QUESTION_DETAIL: (id: string) => `/questions/${id}`,
+  TAG_CONTENT: (id: string) => `/tags/${id}`,
+};

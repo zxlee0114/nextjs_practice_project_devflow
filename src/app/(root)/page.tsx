@@ -9,7 +9,7 @@ const Homepage = async () => {
   console.log(session);
   return (
     <>
-      <h1 className="pt-[100px] text-3xl font-bold underline">
+      <h1 className="text-3xl font-bold underline">
         Hi, {session?.user?.name || "Guest"}!
       </h1>
       <form
