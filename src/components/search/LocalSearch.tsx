@@ -31,7 +31,7 @@ const LocalSearch = ({
   useEffect(() => {
     const debounced = setTimeout(() => {
       if (searchQuery) {
-        console.log({ params: searchParams.toString(), searchQuery });
+        // console.log({ params: searchParams.toString(), searchQuery });
         const newUrl = formUrlQuery({
           params: searchParams.toString(),
           key: "query",
