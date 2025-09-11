@@ -29,7 +29,7 @@ const Metric = ({
         width={16}
         height={16}
         alt={alt}
-        className={`rounded-full object-contain ${imgStyles}`}
+        className={`aspect-square rounded-full object-cover ${imgStyles}`}
       />
       <p className={`${textStyles} flex items-center gap-1`}>
         {value}{" "}
