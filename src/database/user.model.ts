@@ -2,7 +2,7 @@ import { model, models, Schema } from "mongoose";
 
 export type TUser = {
   name: string;
-  userName: string;
+  username: string;
   email: string;
   bio?: string;
   image?: string;
@@ -11,7 +11,7 @@ export type TUser = {
   reputation?: number;
 };
 
-const UserSchema = new Schema(
+const UserSchema = new Schema<TUser>(
   {
     name: { type: String, requered: true },
     username: { type: String, required: true, unique: true },
