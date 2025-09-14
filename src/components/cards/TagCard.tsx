@@ -5,6 +5,7 @@ import { DYNAMIC_ROUTES } from "@/constants/routes";
 import { getDeviconClassName } from "@/lib/utils";
 
 import { Badge } from "../ui/badge";
+
 type TagCardProps = {
   _id: string;
   name: string;
