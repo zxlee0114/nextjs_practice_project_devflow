@@ -4,7 +4,7 @@
 >
 > 一個受 StackOverflow 啟發的開發者社群平台，整合 AI 智能回答、遊戲化機制和個人化推薦系統
 >
-> 來自此課程的專案實作：[點我去](https://jsmastery.com/course/the-ultimate-next-js-15-course)
+> 這個 Repo 來自[此課程](https://jsmastery.com/course/the-ultimate-next-js-15-course)的專案實作，目前正在積極學習中
 
 ## ✨ 目前實作功能
 
