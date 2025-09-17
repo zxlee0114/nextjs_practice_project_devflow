@@ -1,6 +1,7 @@
 # Dev Flow - Next.js 全端開發者社群平台
 
 > 基於 JS Mastery Next.js 15 課程的學習專案
+>
 > 這是一個受 StackOverflow 啟發的開發者社群平台，整合 AI 智能回答、遊戲化機制和個人化推薦系統
 >
 > 本儲存庫是來自[此課程](https://jsmastery.com/course/the-ultimate-next-js-15-course)的專案實作，目前正在積極學習中
