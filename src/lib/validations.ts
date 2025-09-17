@@ -21,7 +21,7 @@ export const SignInSchema = z.object({
 
 export const SignUpSchema = SignInSchema.extend({
   username: z
-    .string()
+    .string({ error: "Username is required." })
     .min(3, { error: "Username must be at least 3 characters long." })
     .max(30, { error: "Username cannot exceed 30 characters." })
     .regex(/^[a-zA-Z0-9_]+$/, {
@@ -52,4 +52,12 @@ export const AskQuestionSchema = z.object({
     )
     .min(1, { error: "At least one tag is required." })
     .max(5, { error: "Cannot add more than 5 tags." }),
+});
+
+export const UserSchema = SignUpSchema.omit({ password: true }).extend({
+  bio: z.string().optional(),
+  image: z.url({ error: "Please provide a valid url." }).optional(),
+  location: z.string().optional(),
+  portfolio: z.string().optional(),
+  reputation: z.number().optional(),
 });
