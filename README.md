@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DevOverflow - Next.js 全端開發者社群平台
 
-## Getting Started
+> 📚 基於 JS Mastery Next.js 15 課程的學習專案
+>
+> 一個受 StackOverflow 啟發的開發者社群平台，整合 AI 智能回答、遊戲化機制和個人化推薦系統
 
-First, run the development server:
+## 🎯 專案狀態
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+🚧 **開發中** - 持續根據 JS Mastery 課程進度更新功能
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ✨ 目前實作功能
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🔐 身份驗證系統
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- 支援 Email/密碼、Google、GitHub 登入
+- 安全的 NextAuth 驗證機制
 
-## Learn More
+### 🏠 首頁功能
 
-To learn more about Next.js, take a look at the following resources:
+- 問題列表展示
+- 智能搜尋與篩選
+- 分頁導航
+- 個人化推薦內容
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 📱 響應式設計
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- 完全支援桌面、平板與手機裝置
+- 高性能載入與流暢互動體驗
 
-## Deploy on Vercel
+## 📝 學習成果
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+透過這個專案，我目前學習到了：
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- ✅ Next.js 15 最新功能與最佳實踐
+- ✅ 現代化全端開發工作流程
+- ✅ TypeScript 在大型專案中的應用
+- ✅ MongoDB 與 Mongoose 資料建模
+- ✅ 身份驗證與授權機制
+- ✅ 響應式設計與用戶體驗優化
+- ✅ 程式碼架構與可重用性設計
+
+## 🛠️ 當前技術棧
+
+### 核心框架
+
+- **Next.js 15** - React 全端框架，支援最新渲染策略
+- **TypeScript** - 型別安全的 JavaScript
+- **React 19** - 最新版本的 React
+
+### 樣式與 UI
+
+- **TailwindCSS 4** - 現代化 CSS 框架
+- **ShadCN UI** - 高品質 React 元件庫
+- **Radix UI** - 無障礙的底層 UI 元件
+- **Lucide React** - 精美的圖標庫
+- **next-themes** - 深色/淺色主題切換
+
+### 資料庫與驗證
+
+- **MongoDB** - NoSQL 資料庫
+- **Mongoose** - MongoDB 物件文檔映射工具
+- **NextAuth (Auth.js)** - 身份驗證解決方案
+- **Zod** - TypeScript 優先的架構驗證
+
+### 表單與編輯器
+
+- **React Hook Form** - 高性能表單庫
+- **MDXEditor** - 豐富的 Markdown 編輯器
+- **Hookform/Resolvers** - 表單驗證解析器
+
+### 開發工具
+
+- **ESLint** - 程式碼品質檢查
+- **Prettier** - 程式碼格式化
+- **Pino** - 高性能日誌記錄
