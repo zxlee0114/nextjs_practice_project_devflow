@@ -1,12 +1,10 @@
-# DevOverflow - Next.js 全端開發者社群平台
+# Devflow - Next.js 全端開發者社群平台
 
-> 📚 基於 JS Mastery Next.js 15 課程的學習專案
+> 基於 JS Mastery Next.js 15 課程的學習專案
 >
 > 一個受 StackOverflow 啟發的開發者社群平台，整合 AI 智能回答、遊戲化機制和個人化推薦系統
-
-## 🎯 專案狀態
-
-🚧 **開發中** - 持續根據 JS Mastery 課程進度更新功能
+>
+> 來自此課程的專案實作：[點我去](https://jsmastery.com/course/the-ultimate-next-js-15-course)
 
 ## ✨ 目前實作功能
 
@@ -42,7 +40,7 @@
 
 ### 核心框架
 
-- **Next.js 15** - React 全端框架，支援最新渲染策略
+- **Next.js 15** - React 全端框架
 - **TypeScript** - 型別安全的 JavaScript
 - **React 19** - 最新版本的 React
 
@@ -63,12 +61,15 @@
 
 ### 表單與編輯器
 
-- **React Hook Form** - 高性能表單庫
-- **MDXEditor** - 豐富的 Markdown 編輯器
-- **Hookform/Resolvers** - 表單驗證解析器
+- **React Hook Form** - 高性能的表單庫
+- **MDXEditor** - 支援 Markdown 富文本編輯器
 
 ### 開發工具
 
 - **ESLint** - 程式碼品質檢查
 - **Prettier** - 程式碼格式化
-- **Pino** - 高性能日誌記錄
+- **Pino** - 兼具美觀與性能的日誌記錄
+
+## 🎯 專案狀態
+
+🚧 **積極開發中** - 將持續根據 JS Mastery 課程進度更新功能
