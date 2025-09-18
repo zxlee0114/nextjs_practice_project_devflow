@@ -9,7 +9,7 @@ export type TAccount = {
   providerAccountId: string;
 };
 
-const AcountSchema = new Schema<TAccount>(
+const AccountSchema = new Schema<TAccount>(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     name: { type: String, required: true },
@@ -21,5 +21,5 @@ const AcountSchema = new Schema<TAccount>(
   { timestamps: true }
 );
 
-const Account = models?.Account || model<TAccount>("Account", AcountSchema);
+const Account = models?.Account || model<TAccount>("Account", AccountSchema);
 export default Account;
