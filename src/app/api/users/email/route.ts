@@ -7,6 +7,7 @@ import { NotFoundError, ValidationError } from "@/lib/http-errors";
 import { UserSchema } from "@/lib/validations";
 import { APIErrorResponse } from "@/types/global";
 
+// POST => fetch account by email
 export async function POST(request: Request) {
   const { email } = await request.json();
 
