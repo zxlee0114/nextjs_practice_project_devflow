@@ -13,7 +13,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  if (!id) throw new NotFoundError("user");
+  if (!id) throw new NotFoundError("User");
 
   try {
     await dbConnect();
@@ -23,7 +23,7 @@ export async function GET(
 
     return NextResponse.json({ success: true, data: user }, { status: 200 });
   } catch (error) {
-    return handleError(error) as APIErrorResponse;
+    return handleError(error, "api") as APIErrorResponse;
   }
 }
 
@@ -43,7 +43,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true, data: user }, { status: 200 });
   } catch (error) {
-    return handleError(error) as APIErrorResponse;
+    return handleError(error, "api") as APIErrorResponse;
   }
 }
 
@@ -70,6 +70,6 @@ export async function PUT(
       { status: 200 }
     );
   } catch (error) {
-    return handleError(error) as APIErrorResponse;
+    return handleError(error, "api") as APIErrorResponse;
   }
 }
