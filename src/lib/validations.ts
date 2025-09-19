@@ -54,7 +54,9 @@ export const AskQuestionSchema = z.object({
     .max(5, { error: "Cannot add more than 5 tags." }),
 });
 
-export const UserSchema = SignUpSchema.omit({ password: true }).extend({
+export const UserSchema = SignUpSchema.pick({ email: true }).extend({
+  name: z.string().min(1, { error: "Name is required" }),
+  username: z.string().min(3, "Username must be at least 3 characters"),
   bio: z.string().optional(),
   image: z.url({ error: "Invalid image URL" }).optional(),
   location: z.string().optional(),
@@ -86,4 +88,16 @@ export const AccountSchema = UserSchema.pick({
   providerAccountId: z
     .string()
     .min(1, { error: "Provider account ID is required" }),
+});
+
+export const SignInWithOAuthSchema = AccountSchema.pick({
+  providerAccountId: true,
+}).extend({
+  provider: z.enum(["github", "google"]),
+  user: UserSchema.pick({
+    name: true,
+    username: true,
+    email: true,
+    image: true,
+  }),
 });

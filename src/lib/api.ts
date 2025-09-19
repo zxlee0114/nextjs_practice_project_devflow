@@ -1,12 +1,16 @@
+import z from "zod";
+
+import ROUTES from "@/constants/routes";
 import { TAccount } from "@/database/account.model";
 import { TUser } from "@/database/user.model";
 
 import { fetchHandler } from "./handlers/fetch";
+import { SignInWithOAuthSchema } from "./validations";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
 
-export const users = {
+const users = {
   getAll: () => fetchHandler(`${API_BASE_URL}/users`),
   getById: (userId: string) => fetchHandler(`${API_BASE_URL}/users/${userId}`),
   getByEmail: (email: string) =>
@@ -30,7 +34,7 @@ export const users = {
     }),
 };
 
-export const accounts = {
+const accounts = {
   getAll: () => fetchHandler(`${API_BASE_URL}/accounts`),
   getById: (accountId: string) =>
     fetchHandler(`${API_BASE_URL}/accounts/${accountId}`),
@@ -53,4 +57,22 @@ export const accounts = {
     fetchHandler(`${API_BASE_URL}/accounts/${accountId}`, {
       method: "DELETE",
     }),
+};
+
+const auth = {
+  oAuthSignIn: ({
+    user,
+    provider,
+    providerAccountId,
+  }: z.infer<typeof SignInWithOAuthSchema>) =>
+    fetchHandler(`${API_BASE_URL}/auth/${ROUTES.SIGNIN_WITH_OAUTH}`, {
+      method: "POST",
+      body: JSON.stringify({ user, provider, providerAccountId }),
+    }),
+};
+
+export const api = {
+  users,
+  accounts,
+  auth,
 };

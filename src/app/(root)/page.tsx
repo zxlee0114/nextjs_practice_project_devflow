@@ -1,10 +1,12 @@
 import Link from "next/link";
 
+import { auth } from "@/auth";
 import QuestionCard from "@/components/cards/QuestionCard";
 import HomeFilter from "@/components/filters/HomeFilter";
 import LocalSearch from "@/components/search/LocalSearch";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/routes";
+import { Question } from "@/types/global";
 
 const questions: Question[] = [
   {
@@ -49,6 +51,10 @@ type SearchParams = {
 };
 
 const Homepage = async ({ searchParams }: SearchParams) => {
+  // === auth test ===
+  const session = await auth();
+  console.log({ session });
+  // === test end ===
   const { query = "", filter = "" } = await searchParams;
 
   const filteredQuestions = questions.filter((question) => {

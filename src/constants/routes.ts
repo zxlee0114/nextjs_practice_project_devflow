@@ -8,6 +8,7 @@ const ROUTES = {
   TAGS: "/tags",
   JOBS: "/jobs",
   PROFILE: "/profile",
+  SIGNIN_WITH_OAUTH: "signin-with-oauth",
 };
 
 export default ROUTES;
