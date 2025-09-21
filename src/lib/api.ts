@@ -1,11 +1,9 @@
-import z from "zod";
-
 import ROUTES from "@/constants/routes";
 import { TAccount } from "@/database/account.model";
 import { TUser } from "@/database/user.model";
+import { SignInWithOAuthParams } from "@/types/action";
 
 import { fetchHandler } from "./handlers/fetch";
-import { SignInWithOAuthSchema } from "./validations";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
@@ -60,11 +58,7 @@ const accounts = {
 };
 
 const auth = {
-  oAuthSignIn: ({
-    user,
-    provider,
-    providerAccountId,
-  }: z.infer<typeof SignInWithOAuthSchema>) =>
+  oAuthSignIn: ({ user, provider, providerAccountId }: SignInWithOAuthParams) =>
     fetchHandler(`${API_BASE_URL}/auth/${ROUTES.SIGNIN_WITH_OAUTH}`, {
       method: "POST",
       body: JSON.stringify({ user, provider, providerAccountId }),

@@ -1,13 +1,52 @@
+import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 
-import { TAccount } from "./database/account.model";
+import { TAccount, TAccountDoc } from "./database/account.model";
+import { TUserDoc } from "./database/user.model";
 import { api } from "./lib/api";
+import { SignInSchema } from "./lib/validations";
 import { ActionResponse, SuccessResponse } from "./types/global";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [GitHub, Google],
+  providers: [
+    GitHub,
+    Google,
+    Credentials({
+      async authorize(credentials) {
+        const validatedFields = SignInSchema.safeParse(credentials);
+
+        if (validatedFields.success) {
+          const { email, password } = validatedFields.data;
+
+          const { data: existingAccount } = (await api.accounts.getByProvider(
+            email
+          )) as SuccessResponse<TAccountDoc>;
+          if (!existingAccount) return null;
+
+          const { data: existingUser } = (await api.users.getById(
+            existingAccount.userId.toString()
+          )) as SuccessResponse<TUserDoc>;
+          if (!existingUser) return null;
+
+          const isValidPassword = await bcrypt.compare(
+            password,
+            existingAccount.password!
+          );
+          if (isValidPassword) {
+            const { id, name, email, image } = existingUser;
+
+            return { id, name, email, image };
+          }
+        }
+
+        // validating fields fails => new user
+        return null;
+      },
+    }),
+  ],
   callbacks: {
     async session({ session, token }) {
       session.user.id = token.sub as string;

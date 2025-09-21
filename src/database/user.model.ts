@@ -1,4 +1,4 @@
-import { model, models, Schema } from "mongoose";
+import { Document, model, models, Schema } from "mongoose";
 
 export type TUser = {
   name: string;
@@ -10,6 +10,8 @@ export type TUser = {
   portfolio?: string;
   reputation?: number;
 };
+
+export type TUserDoc = TUser & Document;
 
 const UserSchema = new Schema<TUser>(
   {

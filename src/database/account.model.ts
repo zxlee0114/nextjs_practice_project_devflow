@@ -1,4 +1,4 @@
-import { model, models, Schema, Types } from "mongoose";
+import { Document, model, models, Schema, Types } from "mongoose";
 
 export type TAccount = {
   userId: Types.ObjectId;
@@ -8,6 +8,8 @@ export type TAccount = {
   provider: string;
   providerAccountId: string;
 };
+
+export type TAccountDoc = TAccount & Document;
 
 const AccountSchema = new Schema<TAccount>(
   {
