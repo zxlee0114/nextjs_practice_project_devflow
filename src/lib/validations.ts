@@ -19,6 +19,8 @@ export const SignInSchema = z.object({
     }),
 });
 
+export type SignInFieldsType = z.infer<typeof SignInSchema>;
+
 export const SignUpSchema = SignInSchema.extend({
   username: z
     .string({ error: "Username is required" })
@@ -36,6 +38,8 @@ export const SignUpSchema = SignInSchema.extend({
       error: "Name can only contain letters and spaces",
     }),
 });
+
+export type SignUpFieldsType = z.infer<typeof SignUpSchema>;
 
 export const AskQuestionSchema = z.object({
   title: z

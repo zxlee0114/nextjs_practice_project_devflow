@@ -75,6 +75,7 @@ export async function signUpWithCredentials(
 export async function signInWithCredentials(
   params: Pick<AuthCredentials, "email" | "password">
 ): Promise<ActionResponse> {
+  // validate params, authorize user & connect database
   const validationResult = await action({ params, schema: SignInSchema });
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
