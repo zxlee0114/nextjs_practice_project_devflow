@@ -5,7 +5,11 @@ import Question from "@/database/question.model";
 import TagQuestion from "@/database/tag-question.model";
 import Tag from "@/database/tag.model";
 import { CreateQuestionParams } from "@/types/action";
-import { ActionResponse, ErrorResponse } from "@/types/global";
+import {
+  ActionResponse,
+  ErrorResponse,
+  Question as QuestionDataType,
+} from "@/types/global";
 
 import action from "../handlers/action";
 import handleError from "../handlers/error";
@@ -13,7 +17,7 @@ import { AskQuestionSchema } from "../validations";
 
 export async function createQuestion(
   params: CreateQuestionParams
-): Promise<ActionResponse> {
+): Promise<ActionResponse<QuestionDataType>> {
   const validationResult = await action({
     params,
     schema: AskQuestionSchema,
@@ -41,7 +45,7 @@ export async function createQuestion(
     for (const tag of tags) {
       const existingTag = await Tag.findOneAndUpdate(
         { name: { $regex: new RegExp(`^${tag}$`, "i") } },
-        { $setOnInsert: { name: tag }, $inc: { question: 1 } },
+        { $setOnInsert: { name: tag }, $inc: { questionCount: 1 } },
         { upsert: true, new: true, session }
       );
 

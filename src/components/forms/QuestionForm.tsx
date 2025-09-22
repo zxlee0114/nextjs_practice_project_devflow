@@ -2,11 +2,16 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MDXEditorMethods } from "@mdxeditor/editor";
+import { ReloadIcon } from "@radix-ui/react-icons";
 import dynamic from "next/dynamic";
-import { KeyboardEvent, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { KeyboardEvent, useRef, useTransition } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
+import { DYNAMIC_ROUTES } from "@/constants/routes";
+import { createQuestion } from "@/lib/actions/question.action";
 import { AskQuestionSchema } from "@/lib/validations";
 
 import TagCard from "../cards/TagCard";
@@ -35,14 +40,32 @@ const defaultValues: QuestionFormValues = {
 };
 
 const QuestionForm = () => {
+  const router = useRouter();
   const editorRef = useRef<MDXEditorMethods>(null);
+  const [isPending, startTransition] = useTransition();
   const form = useForm<QuestionFormValues>({
     resolver: zodResolver(AskQuestionSchema),
     defaultValues,
   });
 
-  const handleCreateQuestion: SubmitHandler<QuestionFormValues> = (data) => {
-    console.log(data);
+  const handleCreateQuestion: SubmitHandler<QuestionFormValues> = async (
+    data
+  ) => {
+    startTransition(async () => {
+      const result = await createQuestion(data);
+
+      if (result.success) {
+        toast.success("Success", {
+          description: "Question created successfully",
+        });
+        if (result.data)
+          router.push(DYNAMIC_ROUTES.QUESTION_DETAIL(result.data._id));
+      } else {
+        toast.error(`Error: ${result.status}`, {
+          description: result.error?.message || "Something went wrong...",
+        });
+      }
+    });
   };
 
   const handleTagKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -200,9 +223,17 @@ const QuestionForm = () => {
         <div className="mt-16 flex justify-end">
           <Button
             type="submit"
+            disabled={isPending}
             className="primary-gradient !text-light-900 w-fit"
           >
-            Ask A Question
+            {isPending ? (
+              <>
+                <ReloadIcon className="mr-2 size-4 animate-spin" />
+                <span>Submitting...</span>
+              </>
+            ) : (
+              <>Ask A Question</>
+            )}
           </Button>
         </div>
       </form>
