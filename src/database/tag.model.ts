@@ -1,9 +1,11 @@
-import { model, models, Schema } from "mongoose";
+import { Document, model, models, Schema } from "mongoose";
 
 export type TTag = {
   name: string;
   questionCount: number;
 };
+
+export type TTagDoc = TTag & Document;
 
 const TagSchema = new Schema<TTag>(
   {

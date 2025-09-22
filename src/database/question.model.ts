@@ -1,4 +1,4 @@
-import { model, models, Schema, Types } from "mongoose";
+import { Document, model, models, Schema, Types } from "mongoose";
 
 export type TQuestion = {
   title: string;
@@ -10,6 +10,8 @@ export type TQuestion = {
   answers: number;
   author: Types.ObjectId;
 };
+
+export type TQuestionDoc = TQuestion & Document;
 
 const QuestionSchema = new Schema<TQuestion>(
   {
