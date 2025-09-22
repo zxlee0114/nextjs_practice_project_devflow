@@ -38,14 +38,10 @@ const handleError = (error: unknown, responseType: ResponseType = "server") => {
   }
 
   if (error instanceof ZodError) {
-    // TODO: check if z.flattenError(err) method works as err.flatten()
     const flattenError = z.flattenError(error);
     const validationError = new ValidationError(
       flattenError.fieldErrors as Record<string, string[]>
     );
-    // const validationError = new ValidationError(
-    //   error.flatten().fieldErrors as Record<string, string[]>
-    // );
 
     logger.error(
       { err: error },

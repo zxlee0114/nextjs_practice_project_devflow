@@ -19,8 +19,6 @@ export const SignInSchema = z.object({
     }),
 });
 
-export type SignInFieldsType = z.infer<typeof SignInSchema>;
-
 export const SignUpSchema = SignInSchema.extend({
   username: z
     .string({ error: "Username is required" })
@@ -39,24 +37,28 @@ export const SignUpSchema = SignInSchema.extend({
     }),
 });
 
-export type SignUpFieldsType = z.infer<typeof SignUpSchema>;
-
 export const AskQuestionSchema = z.object({
   title: z
     .string()
-    .min(1, { error: "Title is required." })
-    .max(100, { error: "Title cannot exceed 100 characters." }),
-  content: z.string().min(1, { error: "Content is required." }),
+    .min(1, { error: "Title is required" })
+    .max(100, { error: "Title cannot exceed 100 characters" }),
+  content: z.string().min(1, { error: "Content is required" }),
   tags: z
     .array(
       z
         .string()
-        .min(1, { error: "Tag is required." })
-        .max(30, { error: "Tag cannot exceed 30 characters." })
+        .min(1, { error: "Tag is required" })
+        .max(30, { error: "Tag cannot exceed 30 characters" })
     )
-    .min(1, { error: "At least one tag is required." })
-    .max(5, { error: "Cannot add more than 5 tags." }),
+    .min(1, { error: "At least one tag is required" })
+    .max(5, { error: "Cannot add more than 5 tags" }),
 });
+
+export const EditQuestionSchema = AskQuestionSchema.extend({
+  questionId: z.string().min(1, { error: "Question ID is required" }),
+});
+
+export const GetQuestionSchema = EditQuestionSchema.pick({ questionId: true });
 
 export const UserSchema = SignUpSchema.pick({ email: true }).extend({
   name: z.string().min(1, { error: "Name is required" }),
