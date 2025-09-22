@@ -15,10 +15,10 @@ const SocialAuthForm = () => {
 
   const handleSignIn = async (provider: "github" | "google") => {
     try {
-      console.log("Signing in with", provider);
+      // console.log("Signing in with", provider);
       await signIn(provider, { callbackUrl: ROUTES.HOME, redirect: true });
     } catch (error) {
-      console.error("Error during social sign-in:", error);
+      // console.error("Error during social sign-in:", error);
       toast.error("Sign-in Failed", {
         description:
           error instanceof Error

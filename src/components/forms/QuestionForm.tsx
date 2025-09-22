@@ -11,8 +11,9 @@ import { toast } from "sonner";
 import z from "zod";
 
 import { DYNAMIC_ROUTES } from "@/constants/routes";
-import { createQuestion } from "@/lib/actions/question.action";
+import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { AskQuestionSchema } from "@/lib/validations";
+import { Question } from "@/types/global";
 
 import TagCard from "../cards/TagCard";
 import { Button } from "../ui/button";
@@ -33,16 +34,22 @@ const Editor = dynamic(() => import("@/components/editor"), {
 
 type QuestionFormValues = z.infer<typeof AskQuestionSchema>;
 
-const defaultValues: QuestionFormValues = {
-  title: "",
-  content: "",
-  tags: [],
+type QuestionFormParams = {
+  question?: Question;
+  isEdit?: boolean;
 };
 
-const QuestionForm = () => {
+const QuestionForm = ({ question, isEdit = false }: QuestionFormParams) => {
   const router = useRouter();
   const editorRef = useRef<MDXEditorMethods>(null);
   const [isPending, startTransition] = useTransition();
+
+  const defaultValues: QuestionFormValues = {
+    title: question?.title || "",
+    content: question?.content || "",
+    tags: question?.tags.map((tag) => tag.name) || [],
+  };
+
   const form = useForm<QuestionFormValues>({
     resolver: zodResolver(AskQuestionSchema),
     defaultValues,
@@ -52,6 +59,26 @@ const QuestionForm = () => {
     data
   ) => {
     startTransition(async () => {
+      if (isEdit && question) {
+        const result = await editQuestion({
+          questionId: question._id,
+          ...data,
+        });
+        if (result.success) {
+          toast.success("Success", {
+            description: "Question updated successfully",
+          });
+          if (result.data)
+            router.push(DYNAMIC_ROUTES.QUESTION_DETAIL(result.data._id));
+        } else {
+          toast.error(`Error: ${result.status}`, {
+            description: result.error?.message || "Something went wrong...",
+          });
+        }
+
+        return;
+      }
+
       const result = await createQuestion(data);
 
       if (result.success) {
@@ -181,7 +208,6 @@ const QuestionForm = () => {
           control={form.control}
           name="tags"
           render={({ field }) => {
-            console.log(field);
             return (
               <FormItem className="flex w-full flex-col gap-3">
                 <FormLabel className="paragraph-semibold text-dark400_light800">
@@ -232,7 +258,7 @@ const QuestionForm = () => {
                 <span>Submitting...</span>
               </>
             ) : (
-              <>Ask A Question</>
+              <>{!isEdit ? "Ask A Question" : "Edit"}</>
             )}
           </Button>
         </div>

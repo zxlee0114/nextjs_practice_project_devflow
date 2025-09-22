@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { DYNAMIC_ROUTES } from "@/constants/routes";
 import { getTimeStamp } from "@/lib/utils";
+import { Question, Tag } from "@/types/global";
 
 import TagCard from "./TagCard";
 import Metric from "../Metric";
@@ -31,7 +32,7 @@ const QuestionCard = ({
 
       <div className="mt-3.5 flex w-full flex-wrap gap-2">
         {tags.map(({ _id, name }: Tag) => (
-          <TagCard key={_id} name={name} _id={_id} compact />
+          <TagCard key={_id} name={name} _id={_id} isCompact />
         ))}
       </div>
 

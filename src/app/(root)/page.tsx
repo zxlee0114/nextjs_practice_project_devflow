@@ -11,7 +11,7 @@ const questions: Question[] = [
   {
     _id: "1",
     title: "How to learn React?",
-    description: "...",
+    content: "...",
     tags: [
       { _id: "1", name: "React" },
       { _id: "2", name: "Javascript" },
@@ -30,7 +30,7 @@ const questions: Question[] = [
   {
     _id: "2",
     title: "How to learn JavaScript?",
-    description: "...",
+    content: "...",
     tags: [{ _id: "2", name: "Javascript" }],
     author: {
       _id: "2",

@@ -84,8 +84,8 @@ export async function createQuestion(
 
     await session.commitTransaction();
 
-    return { success: true, data: question.toObject() };
-    // return { success: true, data: JSON.parse(JSON.stringify(question)) };
+    // return { success: true, data: question.toObject() };
+    return { success: true, data: JSON.parse(JSON.stringify(question)) };
   } catch (error) {
     await session.abortTransaction();
     return handleError(error) as ErrorResponse;
@@ -194,8 +194,8 @@ export async function editQuestion(
     await question.save({ session });
     await session.commitTransaction();
 
-    return { success: true, data: question.toObject() };
-    // return { success: true, data: JSON.parse(JSON.stringify(question)) };
+    // return { success: true, data: question.toObject() };
+    return { success: true, data: JSON.parse(JSON.stringify(question)) };
   } catch (error) {
     await session.abortTransaction();
     return handleError(error) as ErrorResponse;
@@ -224,8 +224,11 @@ export async function getQuestionById(
 
     if (!question) throw new Error("Question not fouund");
 
-    return { success: true, data: question.toObject() };
-    // return { success: true, data: JSON.parse(JSON.stringify(question)) };
+    // return {
+    //   success: true,
+    //   data: question.toObject(),
+    // };
+    return { success: true, data: JSON.parse(JSON.stringify(question)) };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
