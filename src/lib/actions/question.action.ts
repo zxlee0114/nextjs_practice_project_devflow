@@ -1,5 +1,5 @@
 "use server";
-import mongoose from "mongoose";
+import mongoose, { FilterQuery } from "mongoose";
 
 import Question, { TQuestionDoc } from "@/database/question.model";
 import TagQuestion, { TTagQuestion } from "@/database/tag-question.model";
@@ -12,6 +12,7 @@ import {
 import {
   ActionResponse,
   ErrorResponse,
+  PaginatedSearchParams,
   Question as QuestionDataType,
 } from "@/types/global";
 
@@ -21,6 +22,7 @@ import {
   AskQuestionSchema,
   EditQuestionSchema,
   GetQuestionSchema,
+  PaginatedSearchParamsSchema,
 } from "../validations";
 
 interface QuestionPopulated extends Omit<TQuestionDoc, "tags"> {
@@ -57,7 +59,7 @@ export async function createQuestion(
 
     for (const tag of tags) {
       const existingTag = (await Tag.findOneAndUpdate(
-        { name: { $regex: new RegExp(`^${tag}$`, "i") } },
+        { name: { $regex: `^${tag}$`, $options: "i" } },
         { $setOnInsert: { name: tag }, $inc: { questionCount: 1 } },
         { upsert: true, new: true, session }
       )) as TTagDoc;
@@ -84,7 +86,6 @@ export async function createQuestion(
 
     await session.commitTransaction();
 
-    // return { success: true, data: question.toObject() };
     return { success: true, data: JSON.parse(JSON.stringify(question)) };
   } catch (error) {
     await session.abortTransaction();
@@ -143,7 +144,7 @@ export async function editQuestion(
     if (tagsToAdd.length > 0) {
       for (const tag of tagsToAdd) {
         const newTag = (await Tag.findOneAndUpdate(
-          { name: { $regex: new RegExp(`^${tag}$`, "i") } },
+          { name: { $regex: `^${tag}$`, $options: "i" } },
           { $setOnInsert: { name: tag }, $inc: { questionCount: 1 } },
           { upsert: true, new: true, session }
         )) as TTagDoc;
@@ -194,7 +195,6 @@ export async function editQuestion(
     await question.save({ session });
     await session.commitTransaction();
 
-    // return { success: true, data: question.toObject() };
     return { success: true, data: JSON.parse(JSON.stringify(question)) };
   } catch (error) {
     await session.abortTransaction();
@@ -224,11 +224,77 @@ export async function getQuestionById(
 
     if (!question) throw new Error("Question not fouund");
 
-    // return {
-    //   success: true,
-    //   data: question.toObject(),
-    // };
     return { success: true, data: JSON.parse(JSON.stringify(question)) };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function getQuestionsBySearchParams(
+  params: PaginatedSearchParams
+): Promise<ActionResponse<{ questions: QuestionDataType[]; isNext: boolean }>> {
+  const validationResult = await action({
+    params,
+    schema: PaginatedSearchParamsSchema,
+  });
+  if (validationResult instanceof Error)
+    return handleError(validationResult) as ErrorResponse;
+
+  const { page = 1, pageSize = 10, query, filter } = params;
+  const skip = (Number(page) - 1) * pageSize;
+  const limit = pageSize;
+
+  const filterQuery: FilterQuery<typeof Question> = {};
+  let sortCriteria = {};
+
+  try {
+    if (filter === "recommended") {
+      return { success: true, data: { questions: [], isNext: false } };
+    }
+
+    // search
+    if (query) {
+      filterQuery.$or = [
+        { title: { $regex: query, $options: "i" } },
+        { content: { $regex: query, $options: "i" } },
+      ];
+    }
+
+    // filters
+    switch (filter) {
+      case "newest":
+        sortCriteria = { createdAt: -1 };
+        break;
+      case "unanswered":
+        filterQuery.answers = 0;
+        sortCriteria = { createdAt: -1 };
+        break;
+      case "popular":
+        sortCriteria = { upvotes: -1 };
+        break;
+      default:
+        sortCriteria = { createdAt: -1 };
+        break;
+    }
+
+    const questions = await Question.find(filterQuery)
+      .populate("tags", "name")
+      .populate("author", "name image")
+      .lean() // return plain object
+      .sort(sortCriteria)
+      .skip(skip)
+      .limit(limit);
+
+    const totalQuestions = await Question.countDocuments(filterQuery);
+    const isNext = totalQuestions > skip + questions.length;
+
+    return {
+      success: true,
+      data: {
+        questions: JSON.parse(JSON.stringify(questions)),
+        isNext,
+      },
+    };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }

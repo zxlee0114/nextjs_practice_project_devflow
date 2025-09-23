@@ -1,3 +1,4 @@
+import { User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -24,13 +25,21 @@ const Metric = ({
 }: MetricProps) => {
   const metricContent = (
     <>
-      <Image
-        src={imgUrl}
-        width={16}
-        height={16}
-        alt={alt}
-        className={`aspect-square rounded-full object-cover ${imgStyles}`}
-      />
+      {imgUrl ? (
+        <Image
+          src={imgUrl}
+          width={16}
+          height={16}
+          alt={alt}
+          className={`aspect-square rounded-full object-cover ${imgStyles}`}
+        />
+      ) : (
+        <User
+          size={16}
+          strokeWidth={2.5}
+          className="dark:primary-gradient aspect-square rounded-full p-[1px]"
+        />
+      )}
       <p className={`${textStyles} flex items-center gap-1`}>
         {value}{" "}
         <span

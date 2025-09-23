@@ -1,4 +1,7 @@
 import { NextResponse } from "next/server";
+import z from "zod";
+
+import { PaginatedSearchParamsSchema } from "@/lib/validations";
 
 type Tag = {
   _id: string;
@@ -23,16 +26,6 @@ type Question = {
   views: number;
 };
 
-// type ActionResponse<T = null> = {
-//   success: boolean;
-//   data?: T;
-//   error?: {
-//     message: string;
-//     details?: Record<string, string[]>
-//   }
-//   status?: number;
-// };
-
 type ActionResponse<T = null> = SuccessResponse<T> | ErrorResponse;
 
 type SuccessResponse<T> = {
@@ -56,3 +49,5 @@ type RouteParams = {
   params: Promise<Record<string, string>>;
   SearchParams: Promise<Record<string, string>>;
 };
+
+type PaginatedSearchParams = z.infer<typeof PaginatedSearchParamsSchema>;
