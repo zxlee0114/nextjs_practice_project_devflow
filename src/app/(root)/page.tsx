@@ -1,10 +1,12 @@
 import Link from "next/link";
 
 import QuestionCard from "@/components/cards/QuestionCard";
+import DataRenderer from "@/components/DataRenderer";
 import HomeFilter from "@/components/filters/HomeFilter";
 import LocalSearch from "@/components/search/LocalSearch";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/routes";
+import { EMPTY_QUESTION } from "@/constants/state";
 import { getQuestionsBySearchParams } from "@/lib/actions/question.action";
 
 type SearchParams = {
@@ -44,26 +46,27 @@ const Homepage = async ({ searchParams }: SearchParams) => {
         />
         <HomeFilter />
       </section>
-      {result.success && result.data ? (
-        <section className="mt-10 flex w-full flex-col gap-6">
-          {result.data.questions && result.data.questions.length > 0 ? (
-            result.data.questions.map((question) => (
-              <QuestionCard key={question._id} question={question} />
-            ))
-          ) : (
-            <div className="flex-center mt-10 w-full">
-              <p className="text-dark400_light700">No questions found</p>
+
+      {result.success ? (
+        <DataRenderer
+          success={result.success}
+          data={result.data?.questions}
+          empty={EMPTY_QUESTION}
+          render={(questions) => (
+            <div className="mt-10 flex w-full flex-col gap-6">
+              {questions.map((question) => (
+                <QuestionCard key={question._id} question={question} />
+              ))}
             </div>
           )}
-        </section>
+        />
       ) : (
-        <section className="flex-center mt-10 w-full">
-          <p className="text-dark400_light700">
-            {!result.success && result.error.message
-              ? `Some error occured. Here is message: ${result.error.message}`
-              : "Failed to fetch questions. Please try again later"}
-          </p>
-        </section>
+        // error state
+        <DataRenderer
+          success={result.success}
+          empty={EMPTY_QUESTION}
+          error={result.error}
+        />
       )}
     </>
   );
