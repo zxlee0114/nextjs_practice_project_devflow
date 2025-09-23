@@ -88,7 +88,7 @@ const RightSideBar = () => {
               key={_id}
               _id={_id}
               name={name}
-              questions={questions}
+              questionCount={questions}
               showCount
               isCompact
             />

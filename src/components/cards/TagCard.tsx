@@ -2,14 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { DYNAMIC_ROUTES } from "@/constants/routes";
-import { getDeviconClassName } from "@/lib/utils";
+import { cn, getDeviconClassName, getTechDescription } from "@/lib/utils";
 
 import { Badge } from "../ui/badge";
 
 type TagCardProps = {
   _id: string;
   name: string;
-  questions?: number;
+  questionCount?: number;
   showCount?: boolean;
   isCompact?: boolean;
   isRemovable?: boolean;
@@ -20,7 +20,7 @@ type TagCardProps = {
 const TagCard = ({
   _id,
   name,
-  questions,
+  questionCount,
   showCount,
   isCompact,
   isRemovable,
@@ -28,6 +28,7 @@ const TagCard = ({
   handleRemove,
 }: TagCardProps) => {
   const iconClass = getDeviconClassName(name);
+  const tagDescription = getTechDescription(name);
 
   const BadgeContent = (
     <>
@@ -50,7 +51,7 @@ const TagCard = ({
       </Badge>
 
       {showCount && (
-        <p className="small-medium text-dark500_light700">{questions}</p>
+        <p className="small-medium text-dark500_light700">{questionCount}</p>
       )}
     </>
   );
@@ -69,6 +70,33 @@ const TagCard = ({
       </Link>
     );
   }
+
+  return (
+    <Link
+      href={DYNAMIC_ROUTES.TAG_CONTENT(_id)}
+      className="shadow-light100_darknone"
+    >
+      <article className="background-light900_dark200 light-border flex w-full flex-col rounded-2xl border px-8 py-10 sm:w-[250px]">
+        <div className="flex items-center justify-between gap-3">
+          <div className="background-light800_dark400 w-fit rounded-sm px-5 py-1.5">
+            <p className="paragraph-semibold text-dark300_light900">{name}</p>
+          </div>
+          <i className={cn(iconClass, "text-2xl")} aria-hidden="true" />
+        </div>
+
+        <p className="small-regular text-dark500_light700 mt-5 line-clamp-3 w-full">
+          {tagDescription}
+        </p>
+
+        <p className="small-medium text-dark400_light500 mt-3.5">
+          <span className="body-semibold primary-text-gradient mr-2.5">
+            {questionCount}+
+          </span>
+          Questions
+        </p>
+      </article>
+    </Link>
+  );
 };
 
 export default TagCard;

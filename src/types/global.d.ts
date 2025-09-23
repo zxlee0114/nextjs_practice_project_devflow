@@ -47,7 +47,7 @@ type APIResponse<T = null> = NextResponse<SuccessResponse<T>> | ErrorResponse;
 
 type RouteParams = {
   params: Promise<Record<string, string>>;
-  SearchParams: Promise<Record<string, string>>;
+  searchParams: Promise<Record<string, string>>;
 };
 
 type PaginatedSearchParams = z.infer<typeof PaginatedSearchParamsSchema>;
