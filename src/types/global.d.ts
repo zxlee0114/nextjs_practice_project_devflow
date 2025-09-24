@@ -3,6 +3,7 @@ import z from "zod";
 
 import { PaginatedSearchParamsSchema } from "@/lib/validations";
 
+// * ===== Data =====
 type Tag = {
   _id: string;
   name: string;
@@ -26,8 +27,7 @@ type Question = {
   views: number;
 };
 
-type ActionResponse<T = null> = SuccessResponse<T> | ErrorResponse;
-
+// * ===== Response ======
 type SuccessResponse<T> = {
   success: true;
   data?: T;
@@ -42,9 +42,13 @@ type ErrorResponse = {
   status: number;
 };
 
-type APIErrorResponse = NextResponse<ErrorResponse>;
+type ActionResponse<T = null> = SuccessResponse<T> | ErrorResponse;
+
 type APIResponse<T = null> = NextResponse<SuccessResponse<T>> | ErrorResponse;
 
+type APIErrorResponse = NextResponse<ErrorResponse>;
+
+// * ===== Route =====
 type RouteParams = {
   params: Promise<Record<string, string>>;
   searchParams: Promise<Record<string, string>>;
