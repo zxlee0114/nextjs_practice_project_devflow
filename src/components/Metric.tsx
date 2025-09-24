@@ -2,6 +2,8 @@ import { User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { cn } from "@/lib/utils";
+
 type MetricProps = {
   imgUrl: string;
   alt: string;
@@ -10,7 +12,8 @@ type MetricProps = {
   href?: string;
   textStyles?: string;
   imgStyles?: string;
-  isAuthor?: boolean;
+  // isAuthor?: boolean;
+  titleStyles?: string;
 };
 
 const Metric = ({
@@ -21,7 +24,8 @@ const Metric = ({
   href,
   textStyles = "",
   imgStyles = "",
-  isAuthor = false,
+  // isAuthor = false,
+  titleStyles,
 }: MetricProps) => {
   const metricContent = (
     <>
@@ -42,11 +46,11 @@ const Metric = ({
       )}
       <p className={`${textStyles} flex items-center gap-1`}>
         {value}{" "}
-        <span
-          className={`small-regular line-clamp-1 ${isAuthor ? "max-sm:hidden" : ""}`}
-        >
-          {title}
-        </span>
+        {title && (
+          <span className={cn("small-regular line-clamp-1", titleStyles)}>
+            {title}
+          </span>
+        )}
       </p>
     </>
   );

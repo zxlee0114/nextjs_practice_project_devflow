@@ -1,4 +1,12 @@
 "use server";
+
+/* actions exported:
+ * getQuestionsBySearchParams;
+ * getQuestionById;
+ * editQuestion;
+ * createQuestion
+ */
+
 import mongoose, { FilterQuery } from "mongoose";
 
 import Question, { TQuestionDoc } from "@/database/question.model";
@@ -13,7 +21,7 @@ import {
   ActionResponse,
   ErrorResponse,
   PaginatedSearchParams,
-  Question as QuestionDataType,
+  Question as QuestionType,
 } from "@/types/global";
 
 import action from "../handlers/action";
@@ -31,7 +39,7 @@ interface QuestionPopulated extends Omit<TQuestionDoc, "tags"> {
 
 export async function createQuestion(
   params: CreateQuestionParams
-): Promise<ActionResponse<QuestionDataType>> {
+): Promise<ActionResponse<QuestionType>> {
   const validationResult = await action({
     params,
     schema: AskQuestionSchema,
@@ -97,7 +105,7 @@ export async function createQuestion(
 
 export async function editQuestion(
   params: EditQuestionParams
-): Promise<ActionResponse<QuestionDataType>> {
+): Promise<ActionResponse<QuestionType>> {
   const validationResult = await action({
     params,
     schema: EditQuestionSchema,
@@ -206,7 +214,7 @@ export async function editQuestion(
 
 export async function getQuestionById(
   params: GetQuestionParams
-): Promise<ActionResponse<QuestionDataType>> {
+): Promise<ActionResponse<QuestionType>> {
   const validationResult = await action({
     params,
     schema: GetQuestionSchema,
@@ -218,13 +226,14 @@ export async function getQuestionById(
   const { questionId } = validationResult.params!;
 
   try {
-    const question = (await Question.findById(questionId).populate(
-      "tags"
-    )) as QuestionPopulated | null;
+    const question = (await Question.findById(questionId)
+      .populate("tags", "_id name")
+      .populate("author", "_id name image")
+      .lean()) as QuestionType | null;
 
     if (!question) throw new Error("Question not fouund");
 
-    return { success: true, data: JSON.parse(JSON.stringify(question)) };
+    return { success: true, data: question };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
@@ -232,7 +241,7 @@ export async function getQuestionById(
 
 export async function getQuestionsBySearchParams(
   params: PaginatedSearchParams
-): Promise<ActionResponse<{ questions: QuestionDataType[]; isNext: boolean }>> {
+): Promise<ActionResponse<{ questions: QuestionType[]; isNext: boolean }>> {
   const validationResult = await action({
     params,
     schema: PaginatedSearchParamsSchema,
