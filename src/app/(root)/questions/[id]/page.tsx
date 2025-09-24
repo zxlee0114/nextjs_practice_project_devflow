@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import React from "react";
 
 import TagCard from "@/components/cards/TagCard";
+import { Preview } from "@/components/editor/Preview";
 import Metric from "@/components/Metric";
 import UserAvatar from "@/components/UserAvatar";
 import { DYNAMIC_ROUTES } from "@/constants/routes";
@@ -80,7 +81,7 @@ const QuestionDetails = async ({ params }: RouteParams) => {
         />
       </section>
 
-      <section>{content}</section>
+      <Preview content={content} />
 
       {/* tags */}
       <section className="mt-8 flex flex-wrap gap-2">
@@ -95,10 +96,12 @@ const QuestionDetails = async ({ params }: RouteParams) => {
       </section>
 
       {/* answers */}
-      <section className="my-5">{answers}</section>
+      <section className="my-5">
+        <p>answer count: {answers}</p>
+      </section>
 
       <section className="my-5">
-        <p>AnswerForm</p>
+        <p>answer form</p>
       </section>
     </>
   );
