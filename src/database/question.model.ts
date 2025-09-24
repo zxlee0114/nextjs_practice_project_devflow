@@ -1,6 +1,14 @@
-import { Document, model, models, Schema, Types } from "mongoose";
+import {
+  // Document,
+  model,
+  models,
+  Schema,
+  Types,
+  HydratedDocument,
+  Model,
+} from "mongoose";
 
-export type TQuestion = {
+interface TQuestion {
   title: string;
   content: string;
   tags: Types.ObjectId[];
@@ -9,9 +17,10 @@ export type TQuestion = {
   downvotes: number;
   answers: number;
   author: Types.ObjectId;
-};
+}
 
-export type TQuestionDoc = TQuestion & Document;
+export type TQuestionDoc = HydratedDocument<TQuestion>;
+// export interface TQuestionDoc extends TQuestion, Document {}
 
 const QuestionSchema = new Schema<TQuestion>(
   {
@@ -27,7 +36,7 @@ const QuestionSchema = new Schema<TQuestion>(
   { timestamps: true }
 );
 
-const Question =
+const Question: Model<TQuestion> =
   models?.Question || model<TQuestion>("Question", QuestionSchema);
 
 export default Question;

@@ -8,7 +8,9 @@
  */
 
 import mongoose, { FilterQuery } from "mongoose";
+import { revalidatePath } from "next/cache";
 
+import { DYNAMIC_ROUTES } from "@/constants/routes";
 import Question, { TQuestionDoc } from "@/database/question.model";
 import TagQuestion, { TTagQuestion } from "@/database/tag-question.model";
 import Tag, { TTagDoc } from "@/database/tag.model";
@@ -326,16 +328,19 @@ export async function increaseQuestionViews(
   const { questionId } = validationResult.params!;
 
   try {
-    const question: TQuestionDoc | null = await Question.findById(questionId);
-    if (!question) throw new Error("Question not found");
+    const updated = await Question.findByIdAndUpdate(
+      questionId,
+      { $inc: { views: 1 } },
+      { new: true } // 回傳更新後的 document
+    );
 
-    question.views += 1;
+    if (!updated) throw new Error("Question not found");
 
-    await question.save();
+    revalidatePath(DYNAMIC_ROUTES.QUESTION_DETAIL(questionId));
 
     return {
       success: true,
-      data: { views: question.views },
+      data: { views: updated.views },
     };
   } catch (error) {
     return handleError(error) as ErrorResponse;

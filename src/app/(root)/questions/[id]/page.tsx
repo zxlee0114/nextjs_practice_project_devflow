@@ -4,6 +4,7 @@ import React from "react";
 
 import TagCard from "@/components/cards/TagCard";
 import { Preview } from "@/components/editor/Preview";
+import ViewIncrement from "@/components/examine/ViewIncrement";
 import Metric from "@/components/Metric";
 import UserAvatar from "@/components/UserAvatar";
 import { DYNAMIC_ROUTES } from "@/constants/routes";
@@ -21,6 +22,8 @@ const QuestionDetails = async ({ params }: RouteParams) => {
 
   return (
     <>
+      <ViewIncrement questionId={id} />
+
       {/* header */}
       <section className="flex-start w-full flex-col">
         <div className="flex w-full flex-col-reverse justify-between">
