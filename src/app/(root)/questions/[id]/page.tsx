@@ -15,11 +15,9 @@ const QuestionDetails = async ({ params }: RouteParams) => {
   const { id } = await params;
   const getQuestionResult = await getQuestionById({ questionId: id });
 
-  if (!getQuestionResult.success) redirect("/404");
-  if (!getQuestionResult.data) return;
+  if (!getQuestionResult.success || !getQuestionResult.data) redirect("/404");
   const { author, title, createdAt, answers, views, tags, content } =
     getQuestionResult.data;
-  console.log({ Question: getQuestionResult.data });
 
   return (
     <>

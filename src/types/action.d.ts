@@ -5,6 +5,7 @@ import {
   EditQuestionSchema,
   GetQuestionSchema,
   GetTagQuestionSchema,
+  IncreaseQuestionViewSchema,
   SignInWithOAuthSchema,
   SignUpSchema,
 } from "@/lib/validations";
@@ -20,3 +21,5 @@ type EditQuestionParams = z.infer<typeof EditQuestionSchema>;
 type GetQuestionParams = z.infer<typeof GetQuestionSchema>;
 
 type GetTagQuestionsParams = z.infer<typeof GetTagQuestionSchema>;
+
+type IncreaseQuestionViewParams = z.infer<typeof IncreaseQuestionViewSchema>;
