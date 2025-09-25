@@ -220,7 +220,6 @@ export async function getQuestionById(
   const validationResult = await action({
     params,
     schema: GetQuestionSchema,
-    authorize: true,
   });
   if (validationResult instanceof Error)
     return handleError(validationResult) as ErrorResponse;
