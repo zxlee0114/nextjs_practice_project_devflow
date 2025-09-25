@@ -1,14 +1,17 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 import React from "react";
 
 import TagCard from "@/components/cards/TagCard";
 import { Preview } from "@/components/editor/Preview";
-import ViewIncrement from "@/components/examine/ViewIncrement";
 import Metric from "@/components/Metric";
 import UserAvatar from "@/components/UserAvatar";
 import { DYNAMIC_ROUTES } from "@/constants/routes";
-import { getQuestionById } from "@/lib/actions/question.action";
+import {
+  getQuestionById,
+  increaseQuestionViews,
+} from "@/lib/actions/question.action";
 import { formatNumber, getTimeStamp } from "@/lib/utils";
 import { RouteParams, Tag } from "@/types/global";
 
@@ -16,14 +19,17 @@ const QuestionDetails = async ({ params }: RouteParams) => {
   const { id } = await params;
   const getQuestionResult = await getQuestionById({ questionId: id });
 
+  after(async () => {
+    await increaseQuestionViews({ questionId: id });
+  });
+
   if (!getQuestionResult.success || !getQuestionResult.data) redirect("/404");
+
   const { author, title, createdAt, answers, views, tags, content } =
     getQuestionResult.data;
 
   return (
     <>
-      <ViewIncrement questionId={id} />
-
       {/* header */}
       <section className="flex-start w-full flex-col">
         <div className="flex w-full flex-col-reverse justify-between">
