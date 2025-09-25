@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import z from "zod";
 
-import { PaginatedSearchParamsSchema } from "@/lib/validations";
+import {
+  GetAnswersSchema,
+  PaginatedSearchParamsSchema,
+} from "@/lib/validations";
 
 // * ===== Data =====
 type Tag = {
@@ -25,6 +28,13 @@ type Question = {
   upvotes: number;
   answers: number;
   views: number;
+};
+
+type Answer = {
+  _id: string;
+  author: Author;
+  content: string;
+  createdAt: Date;
 };
 
 // * ===== Response ======
@@ -55,3 +65,5 @@ type RouteParams = {
 };
 
 type PaginatedSearchParams = z.infer<typeof PaginatedSearchParamsSchema>;
+
+type GetAnswerParams = z.infer<typeof GetAnswersSchema>;

@@ -64,7 +64,7 @@ export async function createQuestion(
     );
     if (!question) throw new Error("Failed to create the question");
 
-    const questionId = question._id as mongoose.Types.ObjectId;
+    const questionId = question._id;
     const tagIds: mongoose.Types.ObjectId[] = [];
     const tagQuestionDocuments: TTagQuestion[] = [];
 

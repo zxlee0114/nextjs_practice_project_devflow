@@ -9,6 +9,7 @@ import AnswerForm from "@/components/forms/AnswerForm";
 import Metric from "@/components/Metric";
 import UserAvatar from "@/components/UserAvatar";
 import { DYNAMIC_ROUTES } from "@/constants/routes";
+import { getAnwsers } from "@/lib/actions/answer.action";
 import {
   getQuestionById,
   increaseQuestionViews,
@@ -25,6 +26,15 @@ const QuestionDetails = async ({ params }: RouteParams) => {
   });
 
   if (!getQuestionResult.success || !getQuestionResult.data) redirect("/404");
+
+  const getAnswersResult = await getAnwsers({
+    questionId: id,
+    page: 1,
+    pageSize: 10,
+    filter: "latest",
+  });
+
+  // if (!getAnswersResult.success || !getAnswersResult.data) return null;
 
   const { author, title, createdAt, answers, views, tags, content, _id } =
     getQuestionResult.data;
@@ -105,7 +115,11 @@ const QuestionDetails = async ({ params }: RouteParams) => {
 
       {/* answers */}
       <section className="my-5">
-        <p>answer count: {answers}</p>
+        {getAnswersResult.success && getAnswersResult.data ? (
+          <p>{getAnswersResult.data.totalAnswers}</p>
+        ) : (
+          <p>No answers now</p>
+        )}
       </section>
 
       <section className="my-5">

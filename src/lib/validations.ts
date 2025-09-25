@@ -126,6 +126,8 @@ export const GetTagQuestionSchema = PaginatedSearchParamsSchema.omit({
 
 export const IncreaseQuestionViewSchema = GetQuestionSchema;
 
+// * answer
+
 export const AnswerFormSchema = z.object({
   content: z
     .string()
@@ -134,4 +136,8 @@ export const AnswerFormSchema = z.object({
 
 export const CreateAnswerSchema = GetQuestionSchema.extend(
   AnswerFormSchema.shape
+);
+
+export const GetAnswersSchema = PaginatedSearchParamsSchema.extend(
+  GetQuestionSchema.shape
 );
