@@ -125,3 +125,9 @@ export const GetTagQuestionSchema = PaginatedSearchParamsSchema.omit({
 });
 
 export const IncreaseQuestionViewSchema = GetQuestionSchema;
+
+export const AnswerFormSchema = z.object({
+  content: z
+    .string()
+    .min(100, { error: "Answer should not be less than 100 characters" }),
+});

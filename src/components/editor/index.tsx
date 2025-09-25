@@ -1,5 +1,5 @@
 "use client";
-import "@mdxeditor/editor/style.css";
+
 import {
   headingsPlugin,
   listsPlugin,
@@ -31,6 +31,8 @@ import {
 import { basicDark } from "cm6-theme-basic-dark";
 import { useTheme } from "next-themes";
 import type { ForwardedRef } from "react";
+
+import "@mdxeditor/editor/style.css";
 import "./dark-editor.css";
 
 type EditorProps = {
