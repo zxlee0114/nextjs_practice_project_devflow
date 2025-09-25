@@ -131,3 +131,7 @@ export const AnswerFormSchema = z.object({
     .string()
     .min(100, { error: "Answer should not be less than 100 characters" }),
 });
+
+export const CreateAnswerSchema = GetQuestionSchema.extend(
+  AnswerFormSchema.shape
+);

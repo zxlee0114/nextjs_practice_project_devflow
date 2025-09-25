@@ -4,7 +4,8 @@
  * getQuestionsBySearchParams;
  * getQuestionById;
  * editQuestion;
- * createQuestion
+ * createQuestion;
+ * increaseQuestionViews
  */
 
 import mongoose, { FilterQuery } from "mongoose";
@@ -57,10 +58,10 @@ export async function createQuestion(
   session.startTransaction();
 
   try {
-    const [question] = (await Question.create(
+    const [question] = await Question.create(
       [{ title, content, author: userId }],
       { session }
-    )) as TQuestionDoc[] | [];
+    );
     if (!question) throw new Error("Failed to create the question");
 
     const questionId = question._id as mongoose.Types.ObjectId;

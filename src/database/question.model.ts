@@ -8,7 +8,7 @@ import {
   Model,
 } from "mongoose";
 
-interface TQuestion {
+interface IQuestion {
   title: string;
   content: string;
   tags: Types.ObjectId[];
@@ -19,10 +19,10 @@ interface TQuestion {
   author: Types.ObjectId;
 }
 
-export type TQuestionDoc = HydratedDocument<TQuestion>;
+export type TQuestionDoc = HydratedDocument<IQuestion>;
 // export interface TQuestionDoc extends TQuestion, Document {}
 
-const QuestionSchema = new Schema<TQuestion>(
+const QuestionSchema = new Schema<IQuestion>(
   {
     title: { type: String, required: true },
     content: { type: String, required: true },
@@ -36,7 +36,7 @@ const QuestionSchema = new Schema<TQuestion>(
   { timestamps: true }
 );
 
-const Question: Model<TQuestion> =
-  models?.Question || model<TQuestion>("Question", QuestionSchema);
+const Question: Model<IQuestion> =
+  models?.Question || model<IQuestion>("Question", QuestionSchema);
 
 export default Question;

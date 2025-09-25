@@ -2,6 +2,7 @@ import z from "zod";
 
 import {
   AskQuestionSchema,
+  CreateAnswerSchema,
   EditQuestionSchema,
   GetQuestionSchema,
   GetTagQuestionSchema,
@@ -23,3 +24,5 @@ type GetQuestionParams = z.infer<typeof GetQuestionSchema>;
 type GetTagQuestionsParams = z.infer<typeof GetTagQuestionSchema>;
 
 type IncreaseQuestionViewParams = z.infer<typeof IncreaseQuestionViewSchema>;
+
+type CreateAnswerParams = z.infer<typeof CreateAnswerSchema>;
