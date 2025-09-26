@@ -55,6 +55,7 @@
     "eslint-plugin-n": "^17.21.3",
     "eslint-plugin-promise": "^7.2.1",
     "eslint-plugin-tailwindcss": "^4.0.0-beta.0",
+    "shadcn-ui": "^0.9.5",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.8",
     "typescript": "^5"
