@@ -24,14 +24,16 @@ const NavLinks = ({
           (pathname.includes(navItem.route) && navItem.route.length > 1) ||
           pathname === navItem.route;
 
-        if (navItem.route === "/profile") {
-          if (userId) navItem.route = `/profile/${userId}`;
-          else return null;
-        }
+        const href =
+          navItem.route === "/profile" && userId
+            ? `/profile/${userId}`
+            : navItem.route;
+
+        if (navItem.route === "/profile" && !userId) return null;
 
         const LinkComponent = (
           <Link
-            href={navItem.route}
+            href={href}
             key={navItem.label}
             className={cn(
               isActive
@@ -59,7 +61,7 @@ const NavLinks = ({
         );
 
         return isMobileNav ? (
-          <SheetClose asChild key={navItem.route}>
+          <SheetClose asChild key={href}>
             {LinkComponent}
           </SheetClose>
         ) : (
