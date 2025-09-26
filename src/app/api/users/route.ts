@@ -28,7 +28,6 @@ export async function POST(request: Request) {
     if (!validatedData.success) {
       const flattenError = z.flattenError(validatedData.error);
       throw new ValidationError(flattenError.fieldErrors);
-      // throw new ValidationError(validatedData.error.flatten().fieldErrors);
     }
 
     const { email, username } = validatedData.data;

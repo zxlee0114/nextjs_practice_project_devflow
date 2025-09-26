@@ -139,7 +139,11 @@ const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
       <section className="my-5">{renderAnswerList()}</section>
 
       <section className="my-5">
-        <AnswerForm questionId={String(_id)} />
+        <AnswerForm
+          questionId={String(_id)}
+          questionTitle={title}
+          questionContent={content}
+        />
       </section>
     </>
   );
