@@ -90,15 +90,17 @@ export const SignInWithOAuthSchema = AccountSchema.pick({
 export const AskQuestionSchema = z.object({
   title: z
     .string()
-    .min(1, { error: "Title is required" })
+    .min(5, { error: "Title must be at least 5 characters" })
     .max(100, { error: "Title cannot exceed 100 characters" }),
-  content: z.string().min(1, { error: "Content is required" }),
+  content: z.string().min(100, {
+    message: "Question description must have Minimum of 100 characters.",
+  }),
   tags: z
     .array(
       z
         .string()
         .min(1, { error: "Tag is required" })
-        .max(30, { error: "Tag cannot exceed 30 characters" })
+        .max(15, { error: "Tag cannot exceed 15 characters" })
     )
     .min(1, { error: "At least one tag is required" })
     .max(5, { error: "Cannot add more than 5 tags" }),
@@ -141,3 +143,7 @@ export const CreateAnswerSchema = GetQuestionSchema.extend(
 export const GetAnswersSchema = PaginatedSearchParamsSchema.extend(
   GetQuestionSchema.shape
 );
+
+export const AIAnswerSchema = AskQuestionSchema.omit({ tags: true }).extend({
+  userAnswer: z.string().optional(),
+});
