@@ -60,6 +60,10 @@ const AnswerForm = ({
         toast.success("Success", {
           description: "Your answer has posted successfully",
         });
+
+        if (editorRef.current) {
+          editorRef.current.setMarkdown("");
+        }
       } else {
         toast.error("Error", {
           description:

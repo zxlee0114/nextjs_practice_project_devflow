@@ -9,6 +9,7 @@ import { Preview } from "@/components/editor/Preview";
 import AnswerForm from "@/components/forms/AnswerForm";
 import Metric from "@/components/Metric";
 import UserAvatar from "@/components/UserAvatar";
+import Votes from "@/components/votes/Votes";
 import { DYNAMIC_ROUTES } from "@/constants/routes";
 import { getAnwsers } from "@/lib/actions/answer.action";
 import {
@@ -36,8 +37,18 @@ const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
     filter: "latest",
   });
 
-  const { author, title, createdAt, answers, views, tags, content, _id } =
-    getQuestionResult.data;
+  const {
+    author,
+    title,
+    createdAt,
+    answers,
+    views,
+    tags,
+    content,
+    _id,
+    upvotes,
+    downvotes,
+  } = getQuestionResult.data;
 
   const renderAnswerList = () => {
     const { success } = getAnswersResult;
@@ -86,7 +97,14 @@ const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
 
           {/* votes & bookmark */}
           <div className="flex items-center justify-end gap-4">
-            <p>Votes</p>
+            <Votes
+              targetType="question"
+              targetId={_id}
+              upvotes={upvotes}
+              downvotes={downvotes}
+              hasUpvoted={false}
+              hasDownvoted={false}
+            />
             <p>bookmark</p>
           </div>
         </div>
