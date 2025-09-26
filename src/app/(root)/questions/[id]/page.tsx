@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { after } from "next/server";
 import React from "react";
 
+import AnswerList from "@/components/answers/AnswerList";
 import TagCard from "@/components/cards/TagCard";
 import { Preview } from "@/components/editor/Preview";
 import AnswerForm from "@/components/forms/AnswerForm";
@@ -17,8 +18,9 @@ import {
 import { formatNumber, getTimeStamp } from "@/lib/utils";
 import { RouteParams, Tag } from "@/types/global";
 
-const QuestionDetails = async ({ params }: RouteParams) => {
+const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;
+  const { page } = await searchParams;
   const getQuestionResult = await getQuestionById({ questionId: id });
 
   after(async () => {
@@ -34,10 +36,30 @@ const QuestionDetails = async ({ params }: RouteParams) => {
     filter: "latest",
   });
 
-  // if (!getAnswersResult.success || !getAnswersResult.data) return null;
-
   const { author, title, createdAt, answers, views, tags, content, _id } =
     getQuestionResult.data;
+
+  const renderAnswerList = () => {
+    const { success } = getAnswersResult;
+
+    if (!success) {
+      if (getAnswersResult.error)
+        return <AnswerList success={success} error={getAnswersResult.error} />;
+    } else {
+      if (getAnswersResult.data) {
+        const { answers, totalAnswers, isNext } = getAnswersResult.data;
+        return (
+          <AnswerList
+            success={success}
+            data={answers}
+            isNext={isNext}
+            totalAnswers={totalAnswers}
+            page={Number(page) ?? 1}
+          />
+        );
+      }
+    }
+  };
 
   return (
     <>
@@ -114,13 +136,7 @@ const QuestionDetails = async ({ params }: RouteParams) => {
       </section>
 
       {/* answers */}
-      <section className="my-5">
-        {getAnswersResult.success && getAnswersResult.data ? (
-          <p>{getAnswersResult.data.totalAnswers}</p>
-        ) : (
-          <p>No answers now</p>
-        )}
-      </section>
+      <section className="my-5">{renderAnswerList()}</section>
 
       <section className="my-5">
         <AnswerForm questionId={String(_id)} />
