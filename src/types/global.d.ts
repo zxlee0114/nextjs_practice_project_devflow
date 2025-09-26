@@ -6,7 +6,7 @@ import {
   PaginatedSearchParamsSchema,
 } from "@/lib/validations";
 
-// * ===== Data =====
+// * ===== Data ===== * //
 type Tag = {
   _id: string;
   name: string;
@@ -37,7 +37,7 @@ type Answer = {
   createdAt: Date;
 };
 
-// * ===== Response ======
+// * ===== Response (JSON Payload) ====== * //
 type SuccessResponse<T> = {
   success: true;
   data?: T;
@@ -54,11 +54,14 @@ type ErrorResponse = {
 
 type ActionResponse<T = null> = SuccessResponse<T> | ErrorResponse;
 
-type APIResponse<T = null> = NextResponse<SuccessResponse<T>> | ErrorResponse;
-
+// * ===== server response ===== * //
 type APIErrorResponse = NextResponse<ErrorResponse>;
 
-// * ===== Route =====
+type APIResponse<T = null> =
+  | NextResponse<SuccessResponse<T>>
+  | APIErrorResponse;
+
+// * ===== Route ===== * //
 type RouteParams = {
   params: Promise<Record<string, string>>;
   searchParams: Promise<Record<string, string>>;
