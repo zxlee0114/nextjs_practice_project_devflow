@@ -9,7 +9,7 @@ import { Preview } from "@/components/editor/Preview";
 import AnswerForm from "@/components/forms/AnswerForm";
 import Metric from "@/components/Metric";
 import UserAvatar from "@/components/UserAvatar";
-import Votes from "@/components/votes/Votes";
+import VoteCounter from "@/components/votes/VoteCounter";
 import { DYNAMIC_ROUTES } from "@/constants/routes";
 import { getAnwsers } from "@/lib/actions/answer.action";
 import {
@@ -97,9 +97,9 @@ const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
 
           {/* votes & bookmark */}
           <div className="flex items-center justify-end gap-4">
-            <Votes
+            <VoteCounter
               targetType="question"
-              targetId={_id}
+              targetId={String(_id)}
               upvotes={upvotes}
               downvotes={downvotes}
               hasUpvoted={false}

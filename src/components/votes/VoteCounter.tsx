@@ -16,7 +16,7 @@ type voteParams = {
   hasDownvoted?: boolean;
 };
 
-const Votes = ({
+const VoteCounter = ({
   targetType,
   targetId,
   upvotes = 0,
@@ -90,4 +90,4 @@ const Votes = ({
   );
 };
 
-export default Votes;
+export default VoteCounter;
