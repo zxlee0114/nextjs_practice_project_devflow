@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { after } from "next/server";
-import React from "react";
+import React, { Suspense } from "react";
 
 import AnswerList from "@/components/answers/AnswerList";
 import TagCard from "@/components/cards/TagCard";
@@ -16,6 +16,7 @@ import {
   getQuestionById,
   increaseQuestionViews,
 } from "@/lib/actions/question.action";
+import { getVoteState } from "@/lib/actions/vote.action";
 import { formatNumber, getTimeStamp } from "@/lib/utils";
 import { RouteParams, Tag } from "@/types/global";
 
@@ -35,6 +36,11 @@ const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
     page: 1,
     pageSize: 10,
     filter: "latest",
+  });
+
+  const getVoteStatePromise = getVoteState({
+    targetId: id,
+    targetType: "question",
   });
 
   const {
@@ -97,14 +103,15 @@ const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
 
           {/* votes & bookmark */}
           <div className="flex items-center justify-end gap-4">
-            <VoteCounter
-              targetType="question"
-              targetId={String(_id)}
-              upvotes={upvotes}
-              downvotes={downvotes}
-              hasUpvoted={false}
-              hasDownvoted={false}
-            />
+            <Suspense fallback={<div>Loading...</div>}>
+              <VoteCounter
+                targetType="question"
+                targetId={String(_id)}
+                upvotes={upvotes}
+                downvotes={downvotes}
+                getVoteStatePromise={getVoteStatePromise}
+              />
+            </Suspense>
             <p>bookmark</p>
           </div>
         </div>
