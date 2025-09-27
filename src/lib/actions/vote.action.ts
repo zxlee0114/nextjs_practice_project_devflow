@@ -4,12 +4,21 @@ import mongoose, { ClientSession, Model } from "mongoose";
 import { revalidatePath } from "next/cache";
 
 import { Answer, Question, Vote } from "@/database";
-import { CreateVotesParams, UpdateVoteCountParams } from "@/types/action";
+import {
+  CreateVotesParams,
+  GetVoteStateParams,
+  UpdateVoteCountParams,
+  VoteState,
+} from "@/types/action";
 import { ActionResponse, ErrorResponse } from "@/types/global";
 
 import action from "../handlers/action";
 import handleError from "../handlers/error";
-import { CreateVoteSchema, UpdateVoteCountSchema } from "../validations";
+import {
+  CreateVoteSchema,
+  GetVoteStateSchema,
+  UpdateVoteCountSchema,
+} from "../validations";
 
 async function updateVoteCount(
   params: UpdateVoteCountParams,
@@ -66,6 +75,18 @@ export async function createVote(
   session.startTransaction();
 
   try {
+    // let contentDoc;
+    // if (targetType === "question") {
+    //   contentDoc = await Question.findById(targetId).session(session);
+    // }
+    // if (targetType === "answer") {
+    //   contentDoc = await Answer.findById(targetId).session(session);
+    // }
+
+    // if (!contentDoc) throw new Error("Content not found");
+
+    // const contentAuthorId = contentDoc.author.toString();
+
     const existingVote = await Vote.findOne({
       author: userId,
       actionId: targetId,
@@ -145,5 +166,44 @@ export async function createVote(
     return handleError(error) as ErrorResponse;
   } finally {
     await session.endSession();
+  }
+}
+
+export async function getVoteState(
+  params: GetVoteStateParams
+): Promise<ActionResponse<VoteState>> {
+  const validationResult = await action({
+    params,
+    schema: GetVoteStateSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error)
+    return handleError(validationResult) as ErrorResponse;
+
+  const { targetId, targetType } = params;
+  const userId = validationResult.session?.user?.id;
+
+  try {
+    const vote = await Vote.findOne({
+      author: userId,
+      actionId: targetId,
+      actionType: targetType,
+    });
+
+    if (!vote)
+      return {
+        success: true,
+        data: { state: "notVoted" },
+      };
+
+    return {
+      success: true,
+      data: {
+        state: vote.voteType === "upvote" ? "upvoted" : "downvoted",
+      },
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
   }
 }

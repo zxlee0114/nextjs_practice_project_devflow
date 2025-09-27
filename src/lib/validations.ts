@@ -1,6 +1,6 @@
 import z from "zod";
 
-// * user & auth
+// * ===== user & auth ===== * //
 export const SignInSchema = z.object({
   email: z.email("Please provide a valid email address"),
 
@@ -86,7 +86,7 @@ export const SignInWithOAuthSchema = AccountSchema.pick({
   }),
 });
 
-// * question
+// * ===== question ===== * //
 export const AskQuestionSchema = z.object({
   title: z
     .string()
@@ -128,7 +128,7 @@ export const GetTagQuestionSchema = PaginatedSearchParamsSchema.omit({
 
 export const IncreaseQuestionViewSchema = GetQuestionSchema;
 
-// * answer
+// * ===== answer ===== * //
 
 export const AnswerFormSchema = z.object({
   content: z
@@ -148,7 +148,7 @@ export const AIAnswerSchema = AskQuestionSchema.omit({ tags: true }).extend({
   userAnswer: z.string().optional(),
 });
 
-// * vote
+// * ===== vote ===== * //
 
 export const CreateVoteSchema = z.object({
   targetId: z.string().min(1, "Target ID is required"),
@@ -165,3 +165,5 @@ export const UpdateVoteCountSchema = CreateVoteSchema.extend({
     error: "Change must be -1 (decrement) or 1 (increment)",
   }),
 });
+
+export const GetVoteStateSchema = CreateVoteSchema.omit({ voteType: true });
