@@ -1,15 +1,27 @@
 import Link from "next/link";
-import React from "react";
+import React, { Suspense } from "react";
 
 import { DYNAMIC_ROUTES } from "@/constants/routes";
+import { getVoteState } from "@/lib/actions/vote.action";
 import { getTimeStamp } from "@/lib/utils";
 import { Answer } from "@/types/global";
 
 import { Preview } from "../editor/Preview";
 import UserAvatar from "../UserAvatar";
+import VoteCounter from "../votes/VoteCounter";
 
-const AnswerCard = ({ _id, author, content, createdAt }: Answer) => {
-  console.log({ _id });
+const AnswerCard = ({
+  _id,
+  author,
+  content,
+  createdAt,
+  upvotes,
+  downvotes,
+}: Answer) => {
+  const getVoteStatePromise = getVoteState({
+    targetId: _id,
+    targetType: "answer",
+  });
   return (
     <article className="light-border border-b py-10">
       <span id={`answer-${_id}`} className="hash-span" />
@@ -38,7 +50,17 @@ const AnswerCard = ({ _id, author, content, createdAt }: Answer) => {
           </Link>
         </div>
 
-        <div className="flex justify-end">Votes</div>
+        <div className="flex items-center justify-end gap-4">
+          <Suspense fallback={<div>Loading...</div>}>
+            <VoteCounter
+              targetType="answer"
+              targetId={String(_id)}
+              upvotes={upvotes}
+              downvotes={downvotes}
+              getVoteStatePromise={getVoteStatePromise}
+            />
+          </Suspense>
+        </div>
       </div>
 
       <Preview content={content} />
