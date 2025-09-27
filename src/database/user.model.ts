@@ -1,6 +1,6 @@
-import { Document, model, models, Schema } from "mongoose";
+import { HydratedDocument, Model, model, models, Schema } from "mongoose";
 
-export type TUser = {
+interface IUser {
   name: string;
   username: string;
   email: string;
@@ -9,13 +9,14 @@ export type TUser = {
   location?: string;
   portfolio?: string;
   reputation?: number;
-};
+}
 
-export type TUserDoc = TUser & Document;
+export type TQuestionDoc = HydratedDocument<IUser>;
+export type UserWithMeta = IUser & { _id: string; createdAt: Date };
 
-const UserSchema = new Schema<TUser>(
+const UserSchema = new Schema<IUser>(
   {
-    name: { type: String, requered: true },
+    name: { type: String, required: true },
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     bio: { type: String },
@@ -27,5 +28,5 @@ const UserSchema = new Schema<TUser>(
   { timestamps: true }
 );
 
-const User = models?.User || model<TUser>("User", UserSchema);
+const User: Model<IUser> = models?.User || model<IUser>("User", UserSchema);
 export default User;

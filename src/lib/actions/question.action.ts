@@ -136,7 +136,6 @@ export async function editQuestion(
     if (question.title !== title || question.content !== content) {
       question.title = title;
       question.content = content;
-      // await question.save({ session });
     }
 
     // find out tags to mutate

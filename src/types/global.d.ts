@@ -4,6 +4,7 @@ import z from "zod";
 import {
   GetAnswersSchema,
   PaginatedSearchParamsSchema,
+  UserSchema,
 } from "@/lib/validations";
 
 // * ===== Data ===== * //
@@ -38,6 +39,11 @@ type Answer = {
   createdAt: Date;
   upvotes: number;
   downvotes: number;
+};
+
+type User = z.infer<typeof UserSchema> & {
+  _id: string;
+  createdAt: Date;
 };
 
 // * ===== Response (JSON Payload) ====== * //

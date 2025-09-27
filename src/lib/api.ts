@@ -1,6 +1,6 @@
 import ROUTES from "@/constants/routes";
 import { TAccount } from "@/database/account.model";
-import { TUser } from "@/database/user.model";
+import { IUser } from "@/database/user.model";
 import { SignInWithOAuthParams } from "@/types/action";
 import { ActionResponse } from "@/types/global";
 
@@ -17,12 +17,12 @@ const users = {
       method: "POST",
       body: JSON.stringify({ email }),
     }),
-  create: (userData: Partial<TUser>) =>
+  create: (userData: Partial<IUser>) =>
     fetchHandler(`${API_BASE_URL}/users`, {
       method: "POST",
       body: JSON.stringify(userData),
     }),
-  update: (userId: string, userData: Partial<TUser>) =>
+  update: (userId: string, userData: Partial<IUser>) =>
     fetchHandler(`${API_BASE_URL}/users/${userId}`, {
       method: "PUT",
       body: JSON.stringify(userData),
