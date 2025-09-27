@@ -13,7 +13,7 @@ import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { PaginatedSearchParamsSchema } from "../validations";
 
-export async function getUsersByParams(
+export async function getUsersBySearchParams(
   params: PaginatedSearchParams
 ): Promise<ActionResponse<{ users: UserWithMeta[]; isNext: boolean }>> {
   const validatedResult = await action({
