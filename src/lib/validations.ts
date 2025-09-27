@@ -147,3 +147,21 @@ export const GetAnswersSchema = PaginatedSearchParamsSchema.extend(
 export const AIAnswerSchema = AskQuestionSchema.omit({ tags: true }).extend({
   userAnswer: z.string().optional(),
 });
+
+// * vote
+
+export const CreateVoteSchema = z.object({
+  targetId: z.string().min(1, "Target ID is required"),
+  targetType: z.enum(["question", "answer"], {
+    error: "Invalid target type. Must be 'question' or 'answer'",
+  }),
+  voteType: z.enum(["upvote", "downvote"], {
+    error: "Invalid vote type. Must be 'upvote' or 'downvote'",
+  }),
+});
+
+export const UpdateVoteCountSchema = CreateVoteSchema.extend({
+  change: z.union([z.literal(-1), z.literal(1)], {
+    error: "Change must be -1 (decrement) or 1 (increment)",
+  }),
+});

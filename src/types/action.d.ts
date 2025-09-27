@@ -3,12 +3,14 @@ import z from "zod";
 import {
   AskQuestionSchema,
   CreateAnswerSchema,
+  CreateVoteSchema,
   EditQuestionSchema,
   GetQuestionSchema,
   GetTagQuestionSchema,
   IncreaseQuestionViewSchema,
   SignInWithOAuthSchema,
   SignUpSchema,
+  UpdateVoteCountSchema,
 } from "@/lib/validations";
 
 type SignInWithOAuthParams = z.infer<typeof SignInWithOAuthSchema>;
@@ -26,3 +28,7 @@ type GetTagQuestionsParams = z.infer<typeof GetTagQuestionSchema>;
 type IncreaseQuestionViewParams = z.infer<typeof IncreaseQuestionViewSchema>;
 
 type CreateAnswerParams = z.infer<typeof CreateAnswerSchema>;
+
+type CreateVotesParams = z.infer<typeof CreateVoteSchema>;
+
+type UpdateVoteCountParams = z.infer<typeof UpdateVoteCountSchema>;

@@ -1,13 +1,22 @@
-import { model, models, Schema, Types } from "mongoose";
+import {
+  HydratedDocument,
+  Model,
+  model,
+  models,
+  Schema,
+  Types,
+} from "mongoose";
 
-export type TVote = {
+interface IVote {
   author: Types.ObjectId;
   actionId: Types.ObjectId;
   actionType: "question" | "answer";
   voteType: "upvote" | "downvote";
-};
+}
 
-const VoteSchema = new Schema<TVote>(
+export type TVoteDoc = HydratedDocument<IVote>;
+
+const VoteSchema = new Schema<IVote>(
   {
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     actionId: { type: Schema.Types.ObjectId, required: true },
@@ -17,6 +26,6 @@ const VoteSchema = new Schema<TVote>(
   { timestamps: true }
 );
 
-const Vote = models?.Vote || model<TVote>("Vote", VoteSchema);
+const Vote: Model<IVote> = models?.Vote || model<IVote>("Vote", VoteSchema);
 
 export default Vote;
