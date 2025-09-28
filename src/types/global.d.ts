@@ -46,6 +46,12 @@ type User = z.infer<typeof UserSchema> & {
   createdAt: Date;
 };
 
+type Collection = {
+  _id: string;
+  author: string | Author;
+  question: Question;
+};
+
 // * ===== Response (JSON Payload) ====== * //
 type SuccessResponse<T> = {
   success: true;
