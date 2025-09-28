@@ -1,9 +1,11 @@
+import { AnswerFilters } from "@/constants/filter";
 import { EMPTY_ANSWERS } from "@/constants/state";
 // import { getTimeStamp } from "@/lib/utils";
 import { Answer } from "@/types/global";
 
 import AnswerCard from "../cards/AnswerCard";
 import DataRenderer from "../DataRenderer";
+import CommonFilter from "../filters/CommonFilter";
 
 type SuccessProps = {
   success: true;
@@ -32,7 +34,12 @@ const AnswerList = (props: AnswerListProp) => {
             {props.totalAnswers}{" "}
             {props.totalAnswers === 1 ? "Answer" : "Answers"}
           </h3>
-          <p>Filter</p>
+
+          <CommonFilter
+            filters={AnswerFilters}
+            otherClasses="sm:min-w-32"
+            containerClasses="max-xs:w-full"
+          />
         </div>
       )}
 

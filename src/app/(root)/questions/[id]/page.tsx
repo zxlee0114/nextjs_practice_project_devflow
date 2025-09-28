@@ -24,7 +24,7 @@ import { RouteParams, Tag } from "@/types/global";
 
 const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;
-  const { page } = await searchParams;
+  const { page, pageSize, filter } = await searchParams;
   const getQuestionResult = await getQuestionById({ questionId: id });
 
   after(async () => {
@@ -35,9 +35,9 @@ const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
 
   const getAnswersResult = await getAnwsers({
     questionId: id,
-    page: 1,
-    pageSize: 10,
-    filter: "latest",
+    page: Number(page) || 1,
+    pageSize: Number(pageSize) || 10,
+    filter,
   });
 
   const getVoteStatePromise = getVoteState({
