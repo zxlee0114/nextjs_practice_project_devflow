@@ -13,6 +13,7 @@ import UserAvatar from "@/components/UserAvatar";
 import VoteCounter from "@/components/votes/VoteCounter";
 import { DYNAMIC_ROUTES } from "@/constants/routes";
 import { getAnwsers } from "@/lib/actions/answer.action";
+import { getBookmarkState } from "@/lib/actions/collection.action";
 import {
   getQuestionById,
   increaseQuestionViews,
@@ -43,6 +44,8 @@ const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
     targetId: id,
     targetType: "question",
   });
+
+  const getBookmarkStatePromise = getBookmarkState({ questionId: id });
 
   const {
     author,
@@ -113,8 +116,11 @@ const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
                 getVoteStatePromise={getVoteStatePromise}
               />
             </Suspense>
-            <Suspense>
-              <QuestionBookmark questionId={String(_id)} />
+            <Suspense fallback={<div>Loading...</div>}>
+              <QuestionBookmark
+                questionId={String(_id)}
+                getBookmarkStatePromise={getBookmarkStatePromise}
+              />
             </Suspense>
           </div>
         </div>

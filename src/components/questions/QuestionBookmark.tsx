@@ -2,16 +2,30 @@
 
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { use, useState } from "react";
 import { toast } from "sonner";
 
 import { toggleSaveQuestion } from "@/lib/actions/collection.action";
+import { ActionResponse } from "@/types/global";
 
-const QuestionBookmark = ({ questionId }: { questionId: string }) => {
+const QuestionBookmark = ({
+  questionId,
+  getBookmarkStatePromise,
+}: {
+  questionId: string;
+  getBookmarkStatePromise: Promise<ActionResponse<{ saved: boolean }>>;
+}) => {
   const session = useSession();
   const userId = session?.data?.user?.id;
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const bookmarkStateResult = use(getBookmarkStatePromise);
+
+  let hasSaved;
+  if (bookmarkStateResult.success && bookmarkStateResult.data) {
+    hasSaved = bookmarkStateResult.data.saved;
+  }
 
   const handleSave = async () => {
     if (isLoading) return;
@@ -39,7 +53,6 @@ const QuestionBookmark = ({ questionId }: { questionId: string }) => {
     }
   };
 
-  const hasSaved = false;
   return (
     <Image
       src={hasSaved ? "/icons/star-filled.svg" : "/icons/star-red.svg"}
