@@ -11,7 +11,7 @@ interface IUser {
   reputation?: number;
 }
 
-export type TQuestionDoc = HydratedDocument<IUser>;
+export type TUserDoc = HydratedDocument<IUser>;
 export type UserWithMeta = IUser & { _id: string; createdAt: Date };
 
 const UserSchema = new Schema<IUser>(

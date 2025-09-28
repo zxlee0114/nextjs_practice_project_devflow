@@ -128,6 +128,10 @@ export const GetTagQuestionSchema = PaginatedSearchParamsSchema.omit({
 
 export const IncreaseQuestionViewSchema = GetQuestionSchema;
 
+// * ===== collection ===== * //
+
+export const CollectionBaseSchema = GetQuestionSchema; // Question ID
+
 // * ===== answer ===== * //
 
 export const AnswerFormSchema = z.object({
