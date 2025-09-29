@@ -4,6 +4,7 @@ import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
 import CommonFilter from "@/components/filters/CommonFilter";
 import HomeFilter from "@/components/filters/HomeFilter";
+import Pagination from "@/components/Pagination";
 import LocalSearch from "@/components/search/LocalSearch";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filter";
@@ -16,20 +17,18 @@ type SearchParams = {
 };
 
 const Homepage = async ({ searchParams }: SearchParams) => {
-  const { page, pageSize, query, filter } = await searchParams;
+  const { page = 1, pageSize = 5, query, filter } = await searchParams;
 
   const result = await getQuestionsBySearchParams({
-    page: Number(page) || 1,
-    pageSize: Number(pageSize) || 10,
-    query: query || "",
-    filter: filter || "",
+    page: Number(page),
+    pageSize: Number(pageSize),
+    query,
+    filter,
   });
-
-  // if (result.success && result.data) {
-  //   const { questions } = result.data; // TODO: isNext for paginantion
 
   return (
     <>
+      {/* header */}
       <section className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
         <h1 className="h1-bold text-dark100_light900">All Questions</h1>
         <Button
@@ -39,6 +38,8 @@ const Homepage = async ({ searchParams }: SearchParams) => {
           <Link href={ROUTES.ASK_QUESTION}>Ask a Question</Link>
         </Button>
       </section>
+
+      {/* search & sort */}
       <section className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearch
           route="/"
@@ -52,8 +53,10 @@ const Homepage = async ({ searchParams }: SearchParams) => {
           containerClasses="hidden max-md:flex"
         />
       </section>
+
       <HomeFilter />
 
+      {/* main */}
       {result.success ? (
         <DataRenderer
           success={result.success}
@@ -74,6 +77,10 @@ const Homepage = async ({ searchParams }: SearchParams) => {
           empty={EMPTY_QUESTION}
           error={result.error}
         />
+      )}
+
+      {result.success && result.data && (
+        <Pagination page={page} isNext={result.data.isNext || false} />
       )}
     </>
   );

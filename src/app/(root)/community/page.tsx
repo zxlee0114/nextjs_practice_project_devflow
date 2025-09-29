@@ -3,6 +3,7 @@ import React from "react";
 import UserCard from "@/components/cards/UserCard";
 import DataRenderer from "@/components/DataRenderer";
 import CommonFilter from "@/components/filters/CommonFilter";
+import Pagination from "@/components/Pagination";
 import LocalSearch from "@/components/search/LocalSearch";
 import { UserFilters } from "@/constants/filter";
 import ROUTES from "@/constants/routes";
@@ -11,11 +12,11 @@ import { getUsersBySearchParams } from "@/lib/actions/user.action";
 import { RouteParams } from "@/types/global";
 
 const Community = async ({ searchParams }: RouteParams) => {
-  const { page, pageSize, query, filter } = await searchParams;
+  const { page = 1, pageSize = 9, query, filter } = await searchParams;
 
   const result = await getUsersBySearchParams({
-    page: Number(page) || 1,
-    pageSize: Number(pageSize) || 10,
+    page: Number(page),
+    pageSize: Number(pageSize),
     query,
     filter,
   });
@@ -65,6 +66,10 @@ const Community = async ({ searchParams }: RouteParams) => {
           empty={EMPTY_USERS}
           error={result.error}
         />
+      )}
+
+      {success && result.data && (
+        <Pagination page={page} isNext={result.data.isNext || false} />
       )}
     </div>
   );

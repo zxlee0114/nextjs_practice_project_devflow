@@ -6,6 +6,7 @@ import { Answer } from "@/types/global";
 import AnswerCard from "../cards/AnswerCard";
 import DataRenderer from "../DataRenderer";
 import CommonFilter from "../filters/CommonFilter";
+import Pagination from "../Pagination";
 
 type SuccessProps = {
   success: true;
@@ -58,6 +59,10 @@ const AnswerList = (props: AnswerListProp) => {
           empty={EMPTY_ANSWERS}
           error={props.error}
         />
+      )}
+
+      {props.success && props.data && (
+        <Pagination page={props.page} isNext={props.isNext || false} />
       )}
     </div>
   );
