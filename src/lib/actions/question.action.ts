@@ -234,7 +234,7 @@ export async function getQuestionById(
 
     if (!question) throw new Error("Question not fouund");
 
-    return { success: true, data: question };
+    return { success: true, data: JSON.parse(JSON.stringify(question)) };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
