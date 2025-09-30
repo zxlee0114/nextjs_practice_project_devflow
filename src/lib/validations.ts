@@ -86,6 +86,10 @@ export const SignInWithOAuthSchema = AccountSchema.pick({
   }),
 });
 
+export const GetUserByIdSchema = z.object({
+  userId: z.string().min(1, { error: "User ID is required" }),
+});
+
 // * ===== question ===== * //
 export const AskQuestionSchema = z.object({
   title: z

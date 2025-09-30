@@ -2,7 +2,9 @@
 
 import { FilterQuery } from "mongoose";
 
+import { Answer, Question } from "@/database";
 import User, { UserWithMeta } from "@/database/user.model";
+import { GetUserByIdParams } from "@/types/action";
 import {
   ActionResponse,
   ErrorResponse,
@@ -11,7 +13,7 @@ import {
 
 import action from "../handlers/action";
 import handleError from "../handlers/error";
-import { PaginatedSearchParamsSchema } from "../validations";
+import { GetUserByIdSchema, PaginatedSearchParamsSchema } from "../validations";
 
 export async function getUsersBySearchParams(
   params: PaginatedSearchParams
@@ -71,6 +73,42 @@ export async function getUsersBySearchParams(
       data: {
         users: JSON.parse(JSON.stringify(users)),
         isNext,
+      },
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function getUserById(params: GetUserByIdParams): Promise<
+  ActionResponse<{
+    user: UserWithMeta;
+    totalQuestions: number;
+    totalAnswers: number;
+  }>
+> {
+  const validationResult = await action({
+    params,
+    schema: GetUserByIdSchema,
+  });
+
+  if (validationResult instanceof Error)
+    return handleError(validationResult) as ErrorResponse;
+
+  const { userId } = params;
+  try {
+    const user = await User.findById(userId);
+    if (!user) throw new Error("User not found");
+
+    const totalQuestions = await Question.countDocuments({ author: userId });
+    const totalAnswers = await Answer.countDocuments({ author: userId });
+
+    return {
+      success: true,
+      data: {
+        user: JSON.parse(JSON.stringify(user)),
+        totalQuestions,
+        totalAnswers,
       },
     };
   } catch (error) {

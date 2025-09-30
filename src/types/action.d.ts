@@ -8,6 +8,7 @@ import {
   EditQuestionSchema,
   GetQuestionSchema,
   GetTagQuestionSchema,
+  GetUserByIdSchema,
   GetVoteStateSchema,
   IncreaseQuestionViewSchema,
   SignInWithOAuthSchema,
@@ -20,6 +21,8 @@ import {
 type SignInWithOAuthParams = z.infer<typeof SignInWithOAuthSchema>;
 
 type AuthCredentials = z.infer<typeof SignUpSchema>;
+
+type GetUserByIdParams = z.infer<typeof GetUserByIdSchema>;
 
 // * ===== question ===== * //
 
