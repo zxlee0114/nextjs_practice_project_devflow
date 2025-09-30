@@ -20,8 +20,10 @@ const EMPTY_STATE = {
 };
 
 const RightSideBar = async () => {
-  const topQuestionsResponse = await getTopQuestions({ limit: 5 });
-  const topTagsResponse = await getTopTags({ limit: 5 });
+  const [topQuestionsResponse, topTagsResponse] = await Promise.all([
+    getTopQuestions({ limit: 5 }),
+    getTopTags({ limit: 5 }),
+  ]);
 
   return (
     <aside className="custom-scrollbar background-light900_dark200 light-border shadow-light-300 sticky top-0 right-0 flex h-screen w-[350px] flex-col  gap-6 overflow-y-auto border-l p-6 pt-36 max-lg:hidden dark:shadow-none">
