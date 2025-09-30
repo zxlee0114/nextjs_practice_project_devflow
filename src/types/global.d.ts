@@ -11,6 +11,7 @@ import {
 type Tag = {
   _id: string;
   name: string;
+  questionCount?: number;
 };
 
 type Author = {

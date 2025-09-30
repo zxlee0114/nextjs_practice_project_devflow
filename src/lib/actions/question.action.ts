@@ -28,6 +28,7 @@ import {
 
 import action from "../handlers/action";
 import handleError from "../handlers/error";
+import dbConnect from "../mongoose";
 import {
   AskQuestionSchema,
   EditQuestionSchema,
@@ -336,6 +337,24 @@ export async function increaseQuestionViews(
     return {
       success: true,
       data: { views: updated.views },
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function getTopQuestions({
+  limit = 5,
+}): Promise<ActionResponse<QuestionType[]>> {
+  try {
+    await dbConnect();
+    const questions = await Question.find()
+      .sort({ view: -1, upvote: -1 })
+      .limit(limit);
+
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(questions)),
     };
   } catch (error) {
     return handleError(error) as ErrorResponse;

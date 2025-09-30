@@ -1,7 +1,6 @@
 import { FilterQuery } from "mongoose";
 
 import { Tag, Question } from "@/database";
-import { TTag } from "@/database/tag.model";
 import { GetTagQuestionsParams } from "@/types/action";
 import {
   ActionResponse,
@@ -13,6 +12,7 @@ import {
 
 import action from "../handlers/action";
 import handleError from "../handlers/error";
+import dbConnect from "../mongoose";
 import {
   GetTagQuestionSchema,
   PaginatedSearchParamsSchema,
@@ -59,7 +59,7 @@ export async function getTagsBySearchParams(
   }
 
   try {
-    const tags: TTag[] = await Tag.find(filterQuery)
+    const tags = await Tag.find(filterQuery)
       .sort(sortCriteria)
       .skip(skip)
       .limit(limit);
@@ -97,7 +97,7 @@ export async function getTagQuestionsBySearchParams(
   const limit = pageSize;
 
   try {
-    const tag: TTag | null = await Tag.findById(tagId);
+    const tag = await Tag.findById(tagId);
     if (!tag) throw new Error("Tag not found");
 
     const filterQuery: FilterQuery<typeof Question> = {
@@ -128,6 +128,22 @@ export async function getTagQuestionsBySearchParams(
         questions: JSON.parse(JSON.stringify(questions)),
         isNext,
       },
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function getTopTags({
+  limit = 5,
+}): Promise<ActionResponse<TagType[]>> {
+  try {
+    await dbConnect();
+    const tags = await Tag.find().sort({ questionCount: -1 }).limit(limit);
+
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(tags)),
     };
   } catch (error) {
     return handleError(error) as ErrorResponse;

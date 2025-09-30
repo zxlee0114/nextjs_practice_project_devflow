@@ -1,13 +1,13 @@
-import { Document, model, models, Schema } from "mongoose";
+import { HydratedDocument, Model, model, models, Schema } from "mongoose";
 
-export type TTag = {
+interface ITag {
   name: string;
   questionCount: number;
-};
+}
 
-export type TTagDoc = TTag & Document;
+export type TTagDoc = HydratedDocument<ITag>;
 
-const TagSchema = new Schema<TTag>(
+const TagSchema = new Schema<ITag>(
   {
     name: { type: String, required: true, unique: true },
     questionCount: { type: Number, default: 0 },
@@ -15,6 +15,6 @@ const TagSchema = new Schema<TTag>(
   { timestamps: true }
 );
 
-const Tag = models?.Tag || model<TTag>("Tag", TagSchema);
+const Tag: Model<ITag> = models?.Tag || model<ITag>("Tag", TagSchema);
 
 export default Tag;
