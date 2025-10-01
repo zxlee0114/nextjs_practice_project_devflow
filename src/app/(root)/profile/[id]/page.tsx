@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import AnswerCard from "@/components/cards/AnswerCard";
 import QuestionCard from "@/components/cards/QuestionCard";
+import TagCard from "@/components/cards/TagCard";
 import DataRenderer from "@/components/DataRenderer";
 import Pagination from "@/components/Pagination";
 import { Button } from "@/components/ui/button";
@@ -12,13 +13,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProfileLink from "@/components/user/ProfileLink";
 import Stats from "@/components/user/Stats";
 import UserAvatar from "@/components/UserAvatar";
-import { EMPTY_ANSWERS, EMPTY_QUESTION } from "@/constants/state";
+import { EMPTY_ANSWERS, EMPTY_QUESTION, EMPTY_TAGS } from "@/constants/state";
 import {
   getUserAnswers,
   getUserById,
   getUserQuestions,
+  getUserTopTags,
 } from "@/lib/actions/user.action";
-import { GetUserAnswersParams, GetUserQuestionsParams } from "@/types/action";
+import {
+  GetUserAnswersParams,
+  GetUserQuestionsParams,
+  GetUserTopTagsParams,
+} from "@/types/action";
 import { RouteParams } from "@/types/global";
 
 const Profile = async ({ params, searchParams }: RouteParams) => {
@@ -112,10 +118,10 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
       <section className="mt-10 flex gap-10">
         <Tabs defaultValue="top-posts" className="flex-[2]">
           <TabsList className="background-light800_dark400 min-h-[42px] p-1">
-            <TabsTrigger value="top-posts" className="tab">
+            <TabsTrigger value="top-posts" className="tab cursor-pointer">
               Top Posts
             </TabsTrigger>
-            <TabsTrigger value="answers" className="tab">
+            <TabsTrigger value="answers" className="tab cursor-pointer">
               Answers
             </TabsTrigger>
           </TabsList>
@@ -140,8 +146,10 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
         </Tabs>
 
         <aside className="flex w-full min-w-[250px] flex-1 flex-col max-lg:hidden">
-          <h3 className="h3-bold text-dark200_light900">Top Tags</h3>
-          <div className="mt-7 flex flex-col gap-4">Tags</div>
+          <h3 className="h3-bold text-dark200_light900">Top Tech</h3>
+          <div className="mt-7 flex flex-col gap-4">
+            <TopTagsList userId={id} />
+          </div>
         </aside>
       </section>
     </>
@@ -231,6 +239,43 @@ const AnswerList = async ({ userId, page, pageSize }: GetUserAnswersParams) => {
         <DataRenderer
           success={success}
           empty={EMPTY_ANSWERS}
+          error={result.error}
+        />
+      )}
+    </>
+  );
+};
+
+const TopTagsList = async ({ userId }: GetUserTopTagsParams) => {
+  const result = await getUserTopTags({ userId });
+  const { success } = result;
+
+  return (
+    <>
+      {success ? (
+        <DataRenderer
+          success={success}
+          data={result.data?.tags}
+          empty={EMPTY_TAGS}
+          render={(tags) => (
+            <div className="mt-3 flex w-full flex-col gap-4">
+              {tags.map((tag) => (
+                <TagCard
+                  key={tag._id}
+                  _id={tag._id}
+                  name={tag.name}
+                  questionCount={tag.count}
+                  showCount
+                  isCompact
+                />
+              ))}
+            </div>
+          )}
+        />
+      ) : (
+        <DataRenderer
+          success={success}
+          empty={EMPTY_TAGS}
           error={result.error}
         />
       )}

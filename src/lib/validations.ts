@@ -105,6 +105,8 @@ export const GetUserQuestionsSchema = PaginatedSearchParamsSchema.pick({
 
 export const GetUserAnswersSchema = GetUserQuestionsSchema;
 
+export const GetUserTopTagsSchema = GetUserByIdSchema;
+
 // * ===== question ===== * //
 export const AskQuestionSchema = z.object({
   title: z

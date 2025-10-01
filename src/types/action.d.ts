@@ -11,6 +11,7 @@ import {
   GetUserAnswersSchema,
   GetUserByIdSchema,
   GetUserQuestionsSchema,
+  GetUserTopTagsSchema,
   GetVoteStateSchema,
   IncreaseQuestionViewSchema,
   SignInWithOAuthSchema,
@@ -29,6 +30,8 @@ type GetUserByIdParams = z.infer<typeof GetUserByIdSchema>;
 type GetUserQuestionsParams = z.infer<typeof GetUserQuestionsSchema>;
 
 type GetUserAnswersParams = z.infer<typeof GetUserAnswersSchema>;
+
+type GetUserTopTagsParams = z.infer<typeof GetUserTopTagsSchema>;
 
 // * ===== question ===== * //
 
