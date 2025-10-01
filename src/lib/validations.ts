@@ -1,5 +1,13 @@
 import z from "zod";
 
+export const PaginatedSearchParamsSchema = z.object({
+  page: z.number().min(1, "Page must be at least 1").default(1),
+  pageSize: z.number().min(1, "Page size must be at least 1").default(10),
+  query: z.string().optional(),
+  filter: z.string().optional(),
+  sort: z.string().optional(),
+});
+
 // * ===== user & auth ===== * //
 export const SignInSchema = z.object({
   email: z.email("Please provide a valid email address"),
@@ -90,6 +98,11 @@ export const GetUserByIdSchema = z.object({
   userId: z.string().min(1, { error: "User ID is required" }),
 });
 
+export const GetUserQuestionsSchema = PaginatedSearchParamsSchema.pick({
+  page: true,
+  pageSize: true,
+}).extend(GetUserByIdSchema.shape);
+
 // * ===== question ===== * //
 export const AskQuestionSchema = z.object({
   title: z
@@ -115,14 +128,6 @@ export const EditQuestionSchema = AskQuestionSchema.extend({
 });
 
 export const GetQuestionSchema = EditQuestionSchema.pick({ questionId: true });
-
-export const PaginatedSearchParamsSchema = z.object({
-  page: z.number().min(1, "Page must be at least 1").default(1),
-  pageSize: z.number().min(1, "Page size must be at least 1").default(10),
-  query: z.string().optional(),
-  filter: z.string().optional(),
-  sort: z.string().optional(),
-});
 
 export const GetTagQuestionSchema = PaginatedSearchParamsSchema.omit({
   filter: true,

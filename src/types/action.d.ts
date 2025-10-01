@@ -9,6 +9,7 @@ import {
   GetQuestionSchema,
   GetTagQuestionSchema,
   GetUserByIdSchema,
+  GetUserQuestionsSchema,
   GetVoteStateSchema,
   IncreaseQuestionViewSchema,
   SignInWithOAuthSchema,
@@ -16,13 +17,15 @@ import {
   UpdateVoteCountSchema,
 } from "@/lib/validations";
 
-// * ===== auth ===== * //
+// * ===== auth & user ===== * //
 
 type SignInWithOAuthParams = z.infer<typeof SignInWithOAuthSchema>;
 
 type AuthCredentials = z.infer<typeof SignUpSchema>;
 
 type GetUserByIdParams = z.infer<typeof GetUserByIdSchema>;
+
+type GetUserQuestionsParams = z.infer<typeof GetUserQuestionsSchema>;
 
 // * ===== question ===== * //
 

@@ -4,16 +4,21 @@ import { FilterQuery } from "mongoose";
 
 import { Answer, Question } from "@/database";
 import User, { UserWithMeta } from "@/database/user.model";
-import { GetUserByIdParams } from "@/types/action";
+import { GetUserByIdParams, GetUserQuestionsParams } from "@/types/action";
 import {
   ActionResponse,
   ErrorResponse,
   PaginatedSearchParams,
+  Question as QuestionType,
 } from "@/types/global";
 
 import action from "../handlers/action";
 import handleError from "../handlers/error";
-import { GetUserByIdSchema, PaginatedSearchParamsSchema } from "../validations";
+import {
+  GetUserByIdSchema,
+  GetUserQuestionsSchema,
+  PaginatedSearchParamsSchema,
+} from "../validations";
 
 export async function getUsersBySearchParams(
   params: PaginatedSearchParams
@@ -109,6 +114,47 @@ export async function getUserById(params: GetUserByIdParams): Promise<
         user: JSON.parse(JSON.stringify(user)),
         totalQuestions,
         totalAnswers,
+      },
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function getUserQuestions(params: GetUserQuestionsParams): Promise<
+  ActionResponse<{
+    questions: QuestionType[];
+    isNext: boolean;
+  }>
+> {
+  const validationResult = await action({
+    params,
+    schema: GetUserQuestionsSchema,
+  });
+
+  if (validationResult instanceof Error)
+    return handleError(validationResult) as ErrorResponse;
+
+  const { page = 1, pageSize = 10, userId } = params;
+
+  const skip = (Number(page) - 1) * pageSize;
+  const limit = pageSize;
+
+  try {
+    const questions = await Question.find({ author: userId })
+      .populate("tags", "name")
+      .populate("author", "name image")
+      .skip(skip)
+      .limit(limit);
+
+    const totalQuestions = await Question.countDocuments({ author: userId });
+    const isNext = totalQuestions > skip + questions.length;
+
+    return {
+      success: true,
+      data: {
+        questions: JSON.parse(JSON.stringify(questions)),
+        isNext,
       },
     };
   } catch (error) {
