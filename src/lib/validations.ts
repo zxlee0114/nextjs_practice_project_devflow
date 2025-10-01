@@ -103,6 +103,8 @@ export const GetUserQuestionsSchema = PaginatedSearchParamsSchema.pick({
   pageSize: true,
 }).extend(GetUserByIdSchema.shape);
 
+export const GetUserAnswersSchema = GetUserQuestionsSchema;
+
 // * ===== question ===== * //
 export const AskQuestionSchema = z.object({
   title: z

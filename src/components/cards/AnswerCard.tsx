@@ -3,12 +3,17 @@ import React, { Suspense } from "react";
 
 import { DYNAMIC_ROUTES } from "@/constants/routes";
 import { getVoteState } from "@/lib/actions/vote.action";
-import { getTimeStamp } from "@/lib/utils";
+import { cn, getTimeStamp } from "@/lib/utils";
 import { Answer } from "@/types/global";
 
 import { Preview } from "../editor/Preview";
 import UserAvatar from "../UserAvatar";
 import VoteCounter from "../votes/VoteCounter";
+
+interface AnswerCardProps extends Answer {
+  containerClasses?: string;
+  showReadMore?: boolean;
+}
 
 const AnswerCard = ({
   _id,
@@ -17,13 +22,16 @@ const AnswerCard = ({
   createdAt,
   upvotes,
   downvotes,
-}: Answer) => {
+  question,
+  containerClasses,
+  showReadMore = false,
+}: AnswerCardProps) => {
   const getVoteStatePromise = getVoteState({
     targetId: _id,
     targetType: "answer",
   });
   return (
-    <article className="light-border border-b py-10">
+    <article className={cn("light-border border-b py-10", containerClasses)}>
       <span id={`answer-${_id}`} className="hash-span" />
 
       <div className="mb-5 flex flex-col-reverse justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
@@ -64,6 +72,15 @@ const AnswerCard = ({
       </div>
 
       <Preview content={content} />
+
+      {showReadMore && (
+        <Link
+          href={`/questions/${question}#answer-${_id}`}
+          className="body-semibold font-space-grotesk text-primary-500 relative z-10"
+        >
+          <p className="mt-1">Read more...</p>
+        </Link>
+      )}
     </article>
   );
 };

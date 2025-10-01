@@ -40,6 +40,7 @@ type Answer = {
   createdAt: Date;
   upvotes: number;
   downvotes: number;
+  question: string;
 };
 
 type User = z.infer<typeof UserSchema> & {

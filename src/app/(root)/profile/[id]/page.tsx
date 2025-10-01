@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { auth } from "@/auth";
+import AnswerCard from "@/components/cards/AnswerCard";
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
 import Pagination from "@/components/Pagination";
@@ -11,9 +12,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProfileLink from "@/components/user/ProfileLink";
 import Stats from "@/components/user/Stats";
 import UserAvatar from "@/components/UserAvatar";
-import { EMPTY_QUESTION } from "@/constants/state";
-import { getUserById, getUserQuestions } from "@/lib/actions/user.action";
-import { GetUserQuestionsParams } from "@/types/action";
+import { EMPTY_ANSWERS, EMPTY_QUESTION } from "@/constants/state";
+import {
+  getUserAnswers,
+  getUserById,
+  getUserQuestions,
+} from "@/lib/actions/user.action";
+import { GetUserAnswersParams, GetUserQuestionsParams } from "@/types/action";
 import { RouteParams } from "@/types/global";
 
 const Profile = async ({ params, searchParams }: RouteParams) => {
@@ -126,7 +131,11 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
           </TabsContent>
 
           <TabsContent value="answers" className="flex w-full flex-col gap-6">
-            Answers
+            <AnswerList
+              userId={id}
+              page={Number(page)}
+              pageSize={Number(pageSize)}
+            />
           </TabsContent>
         </Tabs>
 
@@ -177,6 +186,51 @@ const QuestionList = async ({
         <DataRenderer
           success={success}
           empty={EMPTY_QUESTION}
+          error={result.error}
+        />
+      )}
+    </>
+  );
+};
+
+const AnswerList = async ({ userId, page, pageSize }: GetUserAnswersParams) => {
+  const result = await getUserAnswers({
+    userId,
+    page,
+    pageSize,
+  });
+
+  const { success } = result;
+
+  return (
+    <>
+      {success ? (
+        <>
+          <DataRenderer
+            success={success}
+            data={result.data?.answers}
+            empty={EMPTY_ANSWERS}
+            render={(answers) => (
+              <div className="flex w-full flex-col gap-10">
+                {answers.map((answer) => (
+                  <AnswerCard
+                    key={answer._id}
+                    {...answer}
+                    content={answer.content.slice(0, 270)}
+                    containerClasses="card-wrapper rounded-[10px] px-7 py-9 sm:px-11"
+                    showReadMore
+                  />
+                ))}
+              </div>
+            )}
+          />
+
+          <Pagination page={page} isNext={result.data?.isNext || false} />
+        </>
+      ) : (
+        <DataRenderer
+          success={success}
+          empty={EMPTY_ANSWERS}
           error={result.error}
         />
       )}

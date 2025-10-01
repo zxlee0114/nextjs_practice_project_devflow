@@ -8,6 +8,7 @@ import {
   EditQuestionSchema,
   GetQuestionSchema,
   GetTagQuestionSchema,
+  GetUserAnswersSchema,
   GetUserByIdSchema,
   GetUserQuestionsSchema,
   GetVoteStateSchema,
@@ -26,6 +27,8 @@ type AuthCredentials = z.infer<typeof SignUpSchema>;
 type GetUserByIdParams = z.infer<typeof GetUserByIdSchema>;
 
 type GetUserQuestionsParams = z.infer<typeof GetUserQuestionsSchema>;
+
+type GetUserAnswersParams = z.infer<typeof GetUserAnswersSchema>;
 
 // * ===== question ===== * //
 
