@@ -53,6 +53,12 @@ type Collection = {
   question: Question;
 };
 
+type BadgeCounts = {
+  GOLD: number;
+  SILVER: number;
+  BRONZE: number;
+};
+
 // * ===== Response (JSON Payload) ====== * //
 type SuccessResponse<T> = {
   success: true;

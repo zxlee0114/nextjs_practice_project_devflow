@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 import ProfileLink from "@/components/user/ProfileLink";
+import Stats from "@/components/user/Stats";
 import UserAvatar from "@/components/UserAvatar";
 import { getUserById } from "@/lib/actions/user.action";
 import { RouteParams } from "@/types/global";
@@ -85,6 +86,16 @@ const Profile = async ({ params }: RouteParams) => {
           )}
         </div>
       </section>
+
+      <Stats
+        totalQuestions={totalQuestions}
+        totalAnswers={totalAnswers}
+        badges={{
+          GOLD: 0,
+          SILVER: 0,
+          BRONZE: 0,
+        }}
+      />
     </>
   );
 };
