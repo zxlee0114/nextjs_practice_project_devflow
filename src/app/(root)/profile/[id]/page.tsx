@@ -20,11 +20,7 @@ import {
   getUserQuestions,
   getUserTopTags,
 } from "@/lib/actions/user.action";
-import {
-  GetUserAnswersParams,
-  GetUserQuestionsParams,
-  GetUserTopTagsParams,
-} from "@/types/action";
+import { GetUserQuestionsParams, GetUserTopTagsParams } from "@/types/action";
 import { RouteParams } from "@/types/global";
 
 const Profile = async ({ params, searchParams }: RouteParams) => {
@@ -34,6 +30,7 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
   if (!id) notFound();
 
   const loggedInUser = await auth();
+  const loggedInUserID = loggedInUser?.user?.id ?? null;
 
   const result = await getUserById({ userId: id });
 
@@ -95,7 +92,7 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
         </div>
 
         <div className="flex justify-end max-sm:mb-5 max-sm:w-full sm:mt-3">
-          {loggedInUser?.user?.id === id && (
+          {loggedInUserID === id && (
             <Link href="/profile/edit">
               <Button className="paragraph-medium btn-secondary text-dark300_light900 min-h-12 min-w-44 px-4 py-3">
                 Edit Profile
@@ -118,6 +115,7 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
       <section className="mt-10 flex gap-10">
         <Tabs defaultValue="top-posts" className="flex-[2]">
           <TabsList className="background-light800_dark400 min-h-[42px] p-1">
+            {/* tab title */}
             <TabsTrigger value="top-posts" className="tab cursor-pointer">
               Top Posts
             </TabsTrigger>
@@ -125,12 +123,14 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
               Answers
             </TabsTrigger>
           </TabsList>
+          {/* tab content */}
           <TabsContent
             value="top-posts"
             className="mt-5 flex w-full flex-col gap-6"
           >
             <QuestionList
               userId={id}
+              loggedInUserID={loggedInUserID}
               page={Number(page)}
               pageSize={Number(pageSize)}
             />
@@ -139,6 +139,7 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
           <TabsContent value="answers" className="flex w-full flex-col gap-6">
             <AnswerList
               userId={id}
+              loggedInUserID={loggedInUserID}
               page={Number(page)}
               pageSize={Number(pageSize)}
             />
@@ -158,11 +159,16 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
 
 export default Profile;
 
+interface ProfileQAListProps extends GetUserQuestionsParams {
+  loggedInUserID: string | null;
+}
+
 const QuestionList = async ({
   userId,
+  loggedInUserID,
   page,
   pageSize,
-}: GetUserQuestionsParams) => {
+}: ProfileQAListProps) => {
   const result = await getUserQuestions({
     userId,
     page,
@@ -182,7 +188,11 @@ const QuestionList = async ({
             render={(questions) => (
               <div className="flex w-full flex-col gap-6">
                 {questions.map((question) => (
-                  <QuestionCard key={question._id} question={question} />
+                  <QuestionCard
+                    key={question._id}
+                    question={question}
+                    showActionBtns={loggedInUserID === question.author._id}
+                  />
                 ))}
               </div>
             )}
@@ -201,7 +211,12 @@ const QuestionList = async ({
   );
 };
 
-const AnswerList = async ({ userId, page, pageSize }: GetUserAnswersParams) => {
+const AnswerList = async ({
+  userId,
+  loggedInUserID,
+  page,
+  pageSize,
+}: ProfileQAListProps) => {
   const result = await getUserAnswers({
     userId,
     page,
@@ -227,6 +242,7 @@ const AnswerList = async ({ userId, page, pageSize }: GetUserAnswersParams) => {
                     content={answer.content.slice(0, 270)}
                     containerClasses="card-wrapper rounded-[10px] px-7 py-9 sm:px-11"
                     showReadMore
+                    showActionBtns={loggedInUserID === answer.author._id}
                   />
                 ))}
               </div>

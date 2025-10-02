@@ -7,12 +7,14 @@ import { cn, getTimeStamp } from "@/lib/utils";
 import { Answer } from "@/types/global";
 
 import { Preview } from "../editor/Preview";
+import ActionButtons from "../user/ActionButtons";
 import UserAvatar from "../UserAvatar";
 import VoteCounter from "../votes/VoteCounter";
 
 interface AnswerCardProps extends Answer {
   containerClasses?: string;
   showReadMore?: boolean;
+  showActionBtns: boolean;
 }
 
 const AnswerCard = ({
@@ -25,14 +27,23 @@ const AnswerCard = ({
   question,
   containerClasses,
   showReadMore = false,
+  showActionBtns = false,
 }: AnswerCardProps) => {
   const getVoteStatePromise = getVoteState({
     targetId: _id,
     targetType: "answer",
   });
   return (
-    <article className={cn("light-border border-b py-10", containerClasses)}>
+    <article
+      className={cn("light-border border-b py-10 relative", containerClasses)}
+    >
       <span id={`answer-${_id}`} className="hash-span" />
+
+      {showActionBtns && (
+        <div className="background-light800 flex-center absolute -top-5 -right-2 size-9 rounded-full">
+          <ActionButtons type="answer" targetId={_id} />
+        </div>
+      )}
 
       <div className="mb-5 flex flex-col-reverse justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
         <div className="flex flex-1 items-start gap-1 sm:items-center">
