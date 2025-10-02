@@ -5,6 +5,8 @@ import {
   CollectionBaseSchema,
   CreateAnswerSchema,
   CreateVoteSchema,
+  DeleteAnswerSchema,
+  DeleteQuestionSchema,
   EditQuestionSchema,
   GetQuestionSchema,
   GetTagQuestionSchema,
@@ -41,6 +43,8 @@ type EditQuestionParams = z.infer<typeof EditQuestionSchema>;
 
 type GetQuestionParams = z.infer<typeof GetQuestionSchema>;
 
+type DeleteQuestionParams = z.infer<typeof DeleteQuestionSchema>;
+
 type GetTagQuestionsParams = z.infer<typeof GetTagQuestionSchema>;
 
 type IncreaseQuestionViewParams = z.infer<typeof IncreaseQuestionViewSchema>;
@@ -50,6 +54,8 @@ type CollectionBaseParams = z.infer<typeof CollectionBaseSchema>;
 // * ===== answer ===== * //
 
 type CreateAnswerParams = z.infer<typeof CreateAnswerSchema>;
+
+type DeleteAnswerParams = z.infer<typeof DeleteAnswerSchema>;
 
 // * ===== vote ===== * //
 

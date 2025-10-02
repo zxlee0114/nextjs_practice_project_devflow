@@ -133,6 +133,8 @@ export const EditQuestionSchema = AskQuestionSchema.extend({
 
 export const GetQuestionSchema = EditQuestionSchema.pick({ questionId: true });
 
+export const DeleteQuestionSchema = GetQuestionSchema;
+
 export const GetTagQuestionSchema = PaginatedSearchParamsSchema.omit({
   filter: true,
 }).extend({
@@ -163,6 +165,10 @@ export const GetAnswersSchema = PaginatedSearchParamsSchema.extend(
 
 export const AIAnswerSchema = AskQuestionSchema.omit({ tags: true }).extend({
   userAnswer: z.string().optional(),
+});
+
+export const DeleteAnswerSchema = z.object({
+  answerId: z.string().min(1, { error: "Answer ID is required" }),
 });
 
 // * ===== vote ===== * //
