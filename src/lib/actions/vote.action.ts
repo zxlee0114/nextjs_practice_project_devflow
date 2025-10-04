@@ -2,6 +2,7 @@
 
 import mongoose, { ClientSession, Model } from "mongoose";
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 
 import { Answer, Question, Vote } from "@/database";
 import {
@@ -19,6 +20,7 @@ import {
   GetVoteStateSchema,
   UpdateVoteCountSchema,
 } from "../validations";
+import { createInteraction } from "./interaction.action";
 
 async function updateVoteCount(
   params: UpdateVoteCountParams,
@@ -75,18 +77,6 @@ export async function createVote(
   session.startTransaction();
 
   try {
-    // let contentDoc;
-    // if (targetType === "question") {
-    //   contentDoc = await Question.findById(targetId).session(session);
-    // }
-    // if (targetType === "answer") {
-    //   contentDoc = await Answer.findById(targetId).session(session);
-    // }
-
-    // if (!contentDoc) throw new Error("Content not found");
-
-    // const contentAuthorId = contentDoc.author.toString();
-
     const existingVote = await Vote.findOne({
       author: userId,
       actionId: targetId,
@@ -155,6 +145,29 @@ export async function createVote(
         session
       );
     }
+
+    // find contentAuthor with targetType & targetId
+    let contentDoc;
+    if (targetType === "question") {
+      contentDoc = await Question.findById(targetId).session(session);
+    }
+    if (targetType === "answer") {
+      contentDoc = await Answer.findById(targetId).session(session);
+    }
+
+    if (!contentDoc) throw new Error("Content not found");
+    const contentAuthorId = contentDoc.author.toString();
+
+    // log the interaction
+    after(async () => {
+      await createInteraction({
+        action: voteType,
+        actionId: targetId,
+        actionTarget: targetType,
+        authorId: contentAuthorId,
+      });
+    });
+
     await session.commitTransaction();
     session.endSession();
 

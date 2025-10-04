@@ -10,6 +10,7 @@
 
 import mongoose, { FilterQuery } from "mongoose";
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 
 import { DYNAMIC_ROUTES } from "@/constants/routes";
 import { Answer, Collection, Vote } from "@/database";
@@ -41,6 +42,7 @@ import {
   IncreaseQuestionViewSchema,
   PaginatedSearchParamsSchema,
 } from "../validations";
+import { createInteraction } from "./interaction.action";
 
 interface QuestionPopulated extends Omit<TQuestionDoc, "tags"> {
   tags: TTagDoc[]; // populate Question 之後以 TTagDoc 替換原本的 tag 型別
@@ -75,13 +77,13 @@ export async function createQuestion(
     const tagQuestionDocuments: TTagQuestion[] = [];
 
     for (const tag of tags) {
-      const existingTag = (await Tag.findOneAndUpdate(
+      const existingTag = await Tag.findOneAndUpdate(
         { name: { $regex: `^${tag}$`, $options: "i" } },
         { $setOnInsert: { name: tag }, $inc: { questionCount: 1 } },
         { upsert: true, new: true, session }
-      )) as TTagDoc;
+      );
 
-      const updatedTagId = existingTag._id as mongoose.Types.ObjectId;
+      const updatedTagId = existingTag._id;
 
       tagIds.push(updatedTagId);
       tagQuestionDocuments.push({
@@ -100,6 +102,16 @@ export async function createQuestion(
       { $addToSet: { tags: { $each: tagIds } } },
       { session }
     );
+
+    // log the interaction
+    after(async () => {
+      await createInteraction({
+        action: "post",
+        actionId: question._id.toString(),
+        actionTarget: "question",
+        authorId: userId as string,
+      });
+    });
 
     await session.commitTransaction();
 
