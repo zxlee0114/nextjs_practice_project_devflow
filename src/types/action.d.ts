@@ -1,9 +1,11 @@
+// import mongoose from "mongoose";
 import z from "zod";
 
 import {
   AskQuestionSchema,
   CollectionBaseSchema,
   CreateAnswerSchema,
+  CreateInteractionSchema,
   CreateVoteSchema,
   DeleteAnswerSchema,
   DeleteQuestionSchema,
@@ -66,3 +68,14 @@ type UpdateVoteCountParams = z.infer<typeof UpdateVoteCountSchema>;
 type GetVoteStateParams = z.infer<typeof GetVoteStateSchema>;
 // type GetVoteStatusParams = Pick<CreateVotesParams, "targetId" | "targetType">;
 type VoteState = { state: "upvoted" | "downvoted" | "notVoted" }; // serve as response
+
+// * ===== interaction ===== * //
+
+type CreateInteractionParams = z.infer<typeof CreateInteractionSchema>;
+
+interface UpdateReputationParams {
+  interaction: IInteractionDoc;
+  session: mongoose.ClientSession;
+  performerId: string;
+  authorId: string;
+}

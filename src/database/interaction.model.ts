@@ -1,11 +1,18 @@
-import { model, models, Schema, Types } from "mongoose";
+import {
+  HydratedDocument,
+  Model,
+  model,
+  models,
+  Schema,
+  Types,
+} from "mongoose";
 
-export type TInteraction = {
+export interface IInteraction {
   user: Types.ObjectId;
   action: string;
   actionId: Types.ObjectId;
   actionType: "question" | "answer";
-};
+}
 
 export const InteractionActionEnums = [
   "view",
@@ -18,7 +25,9 @@ export const InteractionActionEnums = [
   "search",
 ] as const;
 
-const InteractionSchema = new Schema<TInteraction>(
+export type TInteractionDoc = HydratedDocument<IInteraction>;
+
+const InteractionSchema = new Schema<IInteraction>(
   {
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     action: {
@@ -32,7 +41,7 @@ const InteractionSchema = new Schema<TInteraction>(
   { timestamps: true }
 );
 
-const Interaction =
-  models?.Interaction || model<TInteraction>("Interaction", InteractionSchema);
+const Interaction: Model<IInteraction> =
+  models?.Interaction || model<IInteraction>("Interaction", InteractionSchema);
 
 export default Interaction;
