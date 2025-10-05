@@ -11,6 +11,7 @@
 import mongoose, { FilterQuery, Types } from "mongoose";
 import { revalidatePath } from "next/cache";
 import { after } from "next/server";
+import { cache } from "react";
 
 import { auth } from "@/auth";
 import { DYNAMIC_ROUTES } from "@/constants/routes";
@@ -308,7 +309,7 @@ export async function deleteQuestion(
   }
 }
 
-export async function getQuestionById(
+export const getQuestionById = cache(async function getQuestionById(
   params: GetQuestionParams
 ): Promise<ActionResponse<QuestionType>> {
   const validationResult = await action({
@@ -332,7 +333,7 @@ export async function getQuestionById(
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
-}
+});
 
 export async function getRecommendedQuestions({
   userId,
