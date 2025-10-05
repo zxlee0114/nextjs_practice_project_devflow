@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { after } from "next/server";
@@ -21,6 +22,32 @@ import {
 import { getVoteState } from "@/lib/actions/vote.action";
 import { formatNumber, getTimeStamp } from "@/lib/utils";
 import { RouteParams, Tag } from "@/types/global";
+
+export async function generateMetadata({
+  params,
+}: RouteParams): Promise<Metadata> {
+  const { id } = await params;
+  const result = await getQuestionById({ questionId: id });
+
+  if (!result.success || !result.data) {
+    return {
+      title: "Question not found",
+      description: "This question does not exist.",
+    };
+  }
+
+  const { title, content } = result.data;
+
+  return {
+    title,
+    description: content.slice(0, 100),
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: content.slice(0, 100),
+    },
+  };
+}
 
 const QuestionDetails = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;
