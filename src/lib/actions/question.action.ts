@@ -8,12 +8,13 @@
  * increaseQuestionViews
  */
 
-import mongoose, { FilterQuery } from "mongoose";
+import mongoose, { FilterQuery, Types } from "mongoose";
 import { revalidatePath } from "next/cache";
 import { after } from "next/server";
 
+import { auth } from "@/auth";
 import { DYNAMIC_ROUTES } from "@/constants/routes";
-import { Answer, Collection, Vote } from "@/database";
+import { Answer, Collection, Interaction, Vote } from "@/database";
 import Question, { TQuestionDoc } from "@/database/question.model";
 import TagQuestion, { TTagQuestion } from "@/database/tag-question.model";
 import Tag, { TTagDoc } from "@/database/tag.model";
@@ -23,6 +24,7 @@ import {
   EditQuestionParams,
   GetQuestionParams,
   IncreaseQuestionViewParams,
+  RecommendationParams,
 } from "@/types/action";
 import {
   ActionResponse,
@@ -332,6 +334,62 @@ export async function getQuestionById(
   }
 }
 
+export async function getRecommendedQuestions({
+  userId,
+  query,
+  skip,
+  limit,
+}: RecommendationParams) {
+  const interactions = await Interaction.find({
+    user: new Types.ObjectId(userId),
+    actionType: "question",
+    action: { $in: ["view", "upvote", "bookmark", "post"] },
+  })
+    .sort({ createdAt: -1 })
+    .limit(50)
+    .lean();
+
+  const interactedQuestionIds = interactions.map((i) => i.actionId);
+
+  const interactedQuestions = await Question.find({
+    _id: { $in: interactedQuestionIds },
+  }).select("tags");
+
+  const allTags = interactedQuestions.flatMap((q) =>
+    q.tags.map((tag: Types.ObjectId) => tag.toString())
+  ); // [[a, b], [c, d]] => [a, b, c, d]
+
+  const uniqueTagIds = [...new Set(allTags)]; // remove duplicates
+
+  const recommendedQuery: FilterQuery<typeof Question> = {
+    _id: { $nin: interactedQuestionIds },
+    author: { $ne: new Types.ObjectId(userId) },
+    tags: { $in: uniqueTagIds.map((id) => new Types.ObjectId(id)) },
+  };
+
+  if (query) {
+    recommendedQuery.$or = [
+      { title: { $regex: query, $options: "i" } },
+      { content: { $regex: query, $options: "i" } },
+    ];
+  }
+
+  const questions = await Question.find(recommendedQuery)
+    .populate("tags", "name")
+    .populate("author", "name image")
+    .sort({ upvotes: -1, views: -1 })
+    .skip(skip)
+    .limit(limit)
+    .lean();
+
+  const total = await Question.countDocuments(recommendedQuery);
+
+  return {
+    questions: JSON.parse(JSON.stringify(questions)),
+    isNext: total > skip + questions.length,
+  };
+}
+
 export async function getQuestionsBySearchParams(
   params: PaginatedSearchParams
 ): Promise<ActionResponse<{ questions: QuestionType[]; isNext: boolean }>> {
@@ -351,7 +409,21 @@ export async function getQuestionsBySearchParams(
 
   try {
     if (filter === "recommended") {
-      return { success: true, data: { questions: [], isNext: false } };
+      const session = await auth();
+      const userId = session?.user?.id;
+
+      if (!userId) {
+        return { success: true, data: { questions: [], isNext: false } };
+      }
+
+      const recommended = await getRecommendedQuestions({
+        userId,
+        query,
+        skip,
+        limit,
+      });
+
+      return { success: true, data: recommended };
     }
 
     // search

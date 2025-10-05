@@ -10,7 +10,7 @@ import ActionButtons from "../user/ActionButtons";
 
 interface QuestionCardProp {
   question: Question;
-  showActionBtns: boolean;
+  showActionBtns?: boolean;
 }
 
 const QuestionCard = ({

@@ -8,16 +8,13 @@ import { cn } from "@/lib/utils";
 
 import { Button } from "../ui/button";
 
-type Filter = "react" | "javascript";
-// type Filter = "newest" | "popular" | "unanswered" | "recommended";
+type Filter = "newest" | "popular" | "unanswered" | "recommended";
 
 const filters = [
-  { name: "React", value: "react" },
-  { name: "Javascript", value: "javascript" },
-  //   { name: "Newest", value: "newest" },
-  //   { name: "Popular", value: "popular" },
-  //   { name: "Unanswered", value: "unanswered" },
-  //   { name: "Recommended", value: "recommended" },
+  { name: "Newest", value: "newest" },
+  { name: "Popular", value: "popular" },
+  { name: "Unanswered", value: "unanswered" },
+  { name: "Recommended", value: "recommended" },
 ];
 
 const HomeFilter = () => {
