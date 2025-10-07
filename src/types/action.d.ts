@@ -17,6 +17,7 @@ import {
   GetUserQuestionsSchema,
   GetUserTopTagsSchema,
   GetVoteStateSchema,
+  GlobalSearchSchema,
   IncreaseQuestionViewSchema,
   SignInWithOAuthSchema,
   SignUpSchema,
@@ -72,6 +73,10 @@ type VoteState = { state: "upvoted" | "downvoted" | "notVoted" }; // serve as re
 // * ===== interaction ===== * //
 
 type CreateInteractionParams = z.infer<typeof CreateInteractionSchema>;
+
+// * ===== global search ===== * //
+
+type GlobalSearchParams = z.infer<typeof GlobalSearchSchema>;
 
 interface UpdateReputationParams {
   interaction: IInteractionDoc;

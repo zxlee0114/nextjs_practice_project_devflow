@@ -93,3 +93,9 @@ type RouteParams = {
 type PaginatedSearchParams = z.infer<typeof PaginatedSearchParamsSchema>;
 
 type GetAnswerParams = z.infer<typeof GetAnswersSchema>;
+
+type GlobalSearchedItem = {
+  id: string;
+  type: "question" | "answer" | "user" | "tag";
+  title: string;
+};
