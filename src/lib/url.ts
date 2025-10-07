@@ -3,7 +3,7 @@ import qs from "query-string";
 type UrlQueryParams = {
   params: string;
   key: string;
-  value: string;
+  value: string | null;
 };
 
 type RemoveKeysFromUrlQueryParams = {

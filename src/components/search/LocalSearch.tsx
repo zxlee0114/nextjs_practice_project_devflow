@@ -67,15 +67,7 @@ const LocalSearch = ({
         />
       )}
 
-      {/*
-        NOTE: Added suppressHydrationWarning to prevent hydration mismatch in Chrome.
-        This happens because React attaches extra attributes (e.g. data-has-listeners)
-        during client-side hydration that don't exist in the SSR HTML.
-        - Confirmed reproducible in Chrome (even in Guest mode).
-        - Not reproducible in Arc browser.
-      */}
       <Input
-        suppressHydrationWarning // ?
         type="text"
         placeholder={placeholder}
         value={searchQuery}
