@@ -9,6 +9,7 @@ import {
   GetUserByIdParams,
   GetUserQuestionsParams,
   GetUserTopTagsParams,
+  UpdateUserParams,
 } from "@/types/action";
 import {
   ActionResponse,
@@ -28,6 +29,7 @@ import {
   GetUserQuestionsSchema,
   GetUserTopTagsSchema,
   PaginatedSearchParamsSchema,
+  updateUserSchema,
 } from "../validations";
 
 export async function getUsersBySearchParams(
@@ -263,9 +265,7 @@ export async function getUserTopTags(
   }
 }
 
-export async function getUserStats(
-  params: GetUserByIdParams
-): Promise<
+export async function getUserStats(params: GetUserByIdParams): Promise<
   ActionResponse<{
     totalQuestions: number;
     totalAnswers: number;
@@ -324,6 +324,35 @@ export async function getUserStats(
         totalAnswers: answerStats.count,
         badges,
       },
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function updateUser(
+  params: UpdateUserParams
+): Promise<ActionResponse<{ user: UserWithMeta }>> {
+  const validationResult = await action({
+    params,
+    schema: updateUserSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
+
+  const { user } = validationResult.session!;
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(user?.id, params, {
+      new: true,
+    });
+
+    return {
+      success: true,
+      data: { user: JSON.parse(JSON.stringify(updatedUser)) },
     };
   } catch (error) {
     return handleError(error) as ErrorResponse;

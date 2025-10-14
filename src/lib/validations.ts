@@ -107,6 +107,14 @@ export const GetUserAnswersSchema = GetUserQuestionsSchema;
 
 export const GetUserTopTagsSchema = GetUserByIdSchema;
 
+export const updateUserSchema = UserSchema.pick({
+  name: true,
+  username: true,
+  portfolio: true,
+  bio: true,
+  location: true,
+});
+
 // * ===== question ===== * //
 export const AskQuestionSchema = z.object({
   title: z
