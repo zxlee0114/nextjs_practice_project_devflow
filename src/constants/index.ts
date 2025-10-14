@@ -1,7 +1,6 @@
 import ROUTES from "./routes";
 
-const { HOME, COMMUNITY, COLLECTION, JOBS, TAGS, PROFILE, ASK_QUESTION } =
-  ROUTES;
+const { HOME, COMMUNITY, COLLECTION, TAGS, PROFILE, ASK_QUESTION } = ROUTES;
 
 export const NAV_LIST = [
   {
@@ -19,11 +18,11 @@ export const NAV_LIST = [
     route: COLLECTION,
     label: "Collections",
   },
-  {
-    imgURL: "/icons/suitcase.svg",
-    route: JOBS,
-    label: "Find Jobs",
-  },
+  // {
+  //   imgURL: "/icons/suitcase.svg",
+  //   route: JOBS,
+  //   label: "Find Jobs",
+  // },
   {
     imgURL: "/icons/tag.svg",
     route: TAGS,

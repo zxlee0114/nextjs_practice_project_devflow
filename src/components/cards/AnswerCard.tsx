@@ -14,7 +14,7 @@ import VoteCounter from "../votes/VoteCounter";
 interface AnswerCardProps extends Answer {
   containerClasses?: string;
   showReadMore?: boolean;
-  showActionBtns: boolean;
+  showActionBtns?: boolean;
 }
 
 const AnswerCard = ({

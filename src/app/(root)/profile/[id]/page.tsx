@@ -198,8 +198,9 @@ const QuestionList = async ({
               </div>
             )}
           />
-
-          <Pagination page={page} isNext={result.data?.isNext || false} />
+          {result.data && result.data?.questions.length > Number(pageSize) && (
+            <Pagination page={page} isNext={result.data?.isNext || false} />
+          )}
         </>
       ) : (
         <DataRenderer
@@ -249,8 +250,9 @@ const AnswerList = async ({
               </div>
             )}
           />
-
-          <Pagination page={page} isNext={result.data?.isNext || false} />
+          {result.data && (
+            <Pagination page={page} isNext={result.data?.isNext || false} />
+          )}
         </>
       ) : (
         <DataRenderer

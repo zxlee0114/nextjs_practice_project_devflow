@@ -1,6 +1,5 @@
 import { AnswerFilters } from "@/constants/filter";
 import { EMPTY_ANSWERS } from "@/constants/state";
-// import { getTimeStamp } from "@/lib/utils";
 import { Answer } from "@/types/global";
 
 import AnswerCard from "../cards/AnswerCard";
