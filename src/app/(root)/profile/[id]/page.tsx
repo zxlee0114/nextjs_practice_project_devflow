@@ -25,7 +25,7 @@ import { RouteParams } from "@/types/global";
 
 const Profile = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;
-  const { page = 1, pageSize = 10 } = await searchParams;
+  const { page = 1, pageSize = 5 } = await searchParams;
 
   if (!id) notFound();
 
@@ -84,7 +84,7 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
                 />
               )}
               {location && (
-                <ProfileLink icon="/icons/link.svg" title="Location" />
+                <ProfileLink icon="/icons/link.svg" title={location} />
               )}
               <ProfileLink
                 icon="/icons/calendar.svg"
@@ -198,7 +198,7 @@ const QuestionList = async ({
               </div>
             )}
           />
-          {result.data && result.data?.questions.length > Number(pageSize) && (
+          {result.data && (
             <Pagination page={page} isNext={result.data?.isNext || false} />
           )}
         </>

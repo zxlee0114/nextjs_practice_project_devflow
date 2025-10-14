@@ -50,9 +50,23 @@ export const UserSchema = SignUpSchema.pick({ email: true }).extend({
   name: z.string().min(1, { error: "Name is required" }),
   username: z.string().min(3, "Username must be at least 3 characters"),
   bio: z.string().optional(),
-  image: z.url({ error: "Invalid image URL" }).optional(),
+  image: z
+    .string()
+    .trim()
+    .optional()
+    .refine(
+      (val) => !val || val === "" || /^https?:\/\/[^\s$.?#].[^\s]*$/i.test(val),
+      { message: "Invalid portfolio URL" }
+    ),
   location: z.string().optional(),
-  portfolio: z.url({ error: "Invalid portfolio URL" }).optional(),
+  portfolio: z
+    .string()
+    .trim()
+    .optional()
+    .refine(
+      (val) => !val || val === "" || /^https?:\/\/[^\s$.?#].[^\s]*$/i.test(val),
+      { message: "Invalid portfolio URL" }
+    ),
   reputation: z.number().optional(),
 });
 
