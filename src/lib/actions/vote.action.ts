@@ -188,7 +188,7 @@ export async function getVoteState(
   const validationResult = await action({
     params,
     schema: GetVoteStateSchema,
-    authorize: true,
+    // authorize: true,
   });
 
   if (validationResult instanceof Error)

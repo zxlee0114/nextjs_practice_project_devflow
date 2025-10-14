@@ -77,7 +77,7 @@ export async function getBookmarkState(
   const validationResult = await action({
     params,
     schema: CollectionBaseSchema,
-    authorize: true,
+    // authorize: true,
   });
 
   if (validationResult instanceof Error)
@@ -107,7 +107,7 @@ export async function getSavedQuestionsBySearchParams(
   const validationResult = await action({
     params,
     schema: PaginatedSearchParamsSchema,
-    authorize: true,
+    // authorize: true,
   });
 
   if (validationResult instanceof Error) {

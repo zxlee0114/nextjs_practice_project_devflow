@@ -1,3 +1,6 @@
+import { redirect } from "next/navigation";
+
+import { auth } from "@/auth";
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
 import CommonFilter from "@/components/filters/CommonFilter";
@@ -13,6 +16,9 @@ type SearchParams = {
 };
 
 const Collection = async ({ searchParams }: SearchParams) => {
+  const session = await auth();
+  if (!session) return redirect(ROUTES.SIGN_IN);
+
   const { page = 1, pageSize = 5, query, filter } = await searchParams;
 
   const result = await getSavedQuestionsBySearchParams({
