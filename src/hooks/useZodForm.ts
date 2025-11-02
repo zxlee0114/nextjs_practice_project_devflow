@@ -16,6 +16,7 @@ export function useZodForm<
   // Cast schema to `any` here to satisfy resolver overloads while keeping
   // the inferred form field type via TFieldValues.
   return useForm<TFieldValues, TContext>({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(schema as any),
     ...props,
   });
