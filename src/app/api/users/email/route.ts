@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import z from "zod";
 
-import User from "@/database/user.model";
+import User, { IUser } from "@/database/user.model";
 import handleError from "@/lib/handlers/error";
 import { NotFoundError, ValidationError } from "@/lib/http-errors";
 import dbConnect from "@/lib/mongoose";
@@ -25,8 +25,8 @@ export async function POST(request: Request) {
     const user = await User.findOne({ email });
     if (!user) throw new NotFoundError("User");
 
-    return NextResponse.json<SuccessResponse<string>>(
-      { success: true, data: user },
+    return NextResponse.json<SuccessResponse<IUser>>(
+      { success: true, data: user.toObject() },
       { status: 200 }
     );
   } catch (error) {
