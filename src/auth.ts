@@ -70,20 +70,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
     async signIn({ user, profile, account }) {
-      console.log("🔍 SignIn callback triggered", {
-        accountType: account?.type,
-        provider: account?.provider,
-      });
-
       if (account?.type === "credentials") return true;
       if (!account || !user) {
-        console.log("❌ Missing account or user");
         return false;
       }
 
-      console.log("📤 Calling oAuthSignIn API...", {
-        provider: account.provider,
-      });
       const userInfo = {
         name: user.name!,
         email: user.email!,
@@ -101,11 +92,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       })) as ActionResponse;
 
       if (!response.success) {
-        console.error("❌ oAuthSignIn failed:", response);
         return false;
       }
 
-      console.log("✅ SignIn successful");
       return true;
     },
   },
