@@ -1,16 +1,22 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FieldValues, type UseFormProps, useForm } from "react-hook-form";
+import { type UseFormProps, useForm, type FieldValues } from "react-hook-form";
 import type { z } from "zod";
 
 export function useZodForm<
-  T extends z.ZodType<FieldValues, FieldValues>,
+  TSchema extends z.ZodTypeAny,
+  TFieldValues extends FieldValues = z.infer<TSchema> extends FieldValues
+    ? z.infer<TSchema>
+    : FieldValues,
   TContext = unknown,
 >(
-  schema: T,
-  props?: Omit<UseFormProps<z.input<T>, TContext, z.output<T>>, "resolver">
+  schema: TSchema,
+  props?: Omit<UseFormProps<TFieldValues, TContext>, "resolver">
 ) {
-  return useForm({
-    resolver: zodResolver(schema),
+  // zodResolver type definitions are strict about the Zod schema input type.
+  // Cast schema to `any` here to satisfy resolver overloads while keeping
+  // the inferred form field type via TFieldValues.
+  return useForm<TFieldValues, TContext>({
+    resolver: zodResolver(schema as any),
     ...props,
   });
 }
